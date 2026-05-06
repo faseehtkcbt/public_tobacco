@@ -356,13 +356,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
   <div class="section">
     <div class="table-wrap">
       <div class="table-header">
-        <span class="table-title">All facilities</span>
+        <span class="table-title">All facilities <span id="bank-region-label" style="font-weight:400;color:var(--text3)"></span></span>
         <div style="display:flex;gap:8px">
-          <div class="tabs" style="margin:0">
-            <div class="tab active">All</div>
-            <div class="tab">Africa</div>
-            <div class="tab">Europe</div>
-            <div class="tab">Asia</div>
+          <div class="tabs" style="margin:0" id="bank-region-tabs">
+            <div class="tab active" onclick="filterBankRegion('All',this)">All</div>
+            <div class="tab" onclick="filterBankRegion('Africa',this)">Africa</div>
+            <div class="tab" onclick="filterBankRegion('Europe',this)">Europe</div>
+            <div class="tab" onclick="filterBankRegion('Asia',this)">Asia</div>
           </div>
         </div>
       </div>
@@ -370,99 +370,114 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
         <thead><tr>
           <th>Bank</th><th>Type / Region</th><th>Facility Limit</th><th>Outstanding</th><th>Undrawn</th><th>Rate</th><th>Utilisation</th><th>Status</th>
         </tr></thead>
-        <tbody>
-          <tr onclick="nav('loans')" style="cursor:pointer">
+        <tbody id="banks-tbody">
+          <tr class="bank-row" data-bank="SBSA" data-region="Africa" onclick="navToBank('SBSA')" style="cursor:pointer" title="View SBSA loans">
             <td><strong>SBSA</strong><br/><span style="font-size:11px;color:var(--text3)">Standard Bank SA</span></td>
             <td><span class="badge badge-blue">Africa</span></td>
-            <td class="td-mono">$122.0M</td>
-            <td class="td-mono">$107.3M</td>
+            <td class="td-mono">$122.0M</td><td class="td-mono">$107.3M</td>
             <td class="td-mono" style="color:var(--amber)">$14.7M</td>
             <td class="td-mono">SOFR+5.00%</td>
             <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill amber" style="width:88%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">88%</span></div></td>
             <td><span class="badge badge-green">Active</span></td>
           </tr>
-          <tr onclick="nav('loans')" style="cursor:pointer">
+          <tr class="bank-row" data-bank="JTI" data-region="Other" onclick="navToBank('JTI')" style="cursor:pointer" title="View JTI loans">
             <td><strong>JTI</strong><br/><span style="font-size:11px;color:var(--text3)">JT International</span></td>
             <td><span class="badge badge-gray">Other</span></td>
-            <td class="td-mono">$40.0M</td>
-            <td class="td-mono">$39.1M</td>
+            <td class="td-mono">$40.0M</td><td class="td-mono">$39.1M</td>
             <td class="td-mono" style="color:var(--red)">$0.9M</td>
             <td class="td-mono">Fixed 7.50%</td>
             <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill red" style="width:98%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">98%</span></div></td>
             <td><span class="badge badge-amber">Near limit</span></td>
           </tr>
-          <tr onclick="nav('loans')" style="cursor:pointer">
+          <tr class="bank-row" data-bank="AFREXIM" data-region="Africa" onclick="navToBank('AFREXIM')" style="cursor:pointer" title="View AFREXIM loans">
             <td><strong>AFREXIM</strong><br/><span style="font-size:11px;color:var(--text3)">African Export-Import</span></td>
             <td><span class="badge badge-blue">Africa</span></td>
-            <td class="td-mono">$40.0M</td>
-            <td class="td-mono">$37.7M</td>
+            <td class="td-mono">$40.0M</td><td class="td-mono">$37.7M</td>
             <td class="td-mono" style="color:var(--red)">$2.3M</td>
             <td class="td-mono">SOFR+4.75%</td>
             <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill red" style="width:95%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">95%</span></div></td>
             <td><span class="badge badge-amber">Near limit</span></td>
           </tr>
-          <tr onclick="nav('loans')" style="cursor:pointer">
+          <tr class="bank-row" data-bank="TDB" data-region="Africa" onclick="navToBank('TDB')" style="cursor:pointer" title="View TDB loans">
             <td><strong>TDB</strong><br/><span style="font-size:11px;color:var(--text3)">Trade & Dev. Bank</span></td>
             <td><span class="badge badge-blue">Africa</span></td>
-            <td class="td-mono">$65.0M</td>
-            <td class="td-mono">$48.9M</td>
+            <td class="td-mono">$65.0M</td><td class="td-mono">$48.9M</td>
             <td class="td-mono" style="color:var(--accent)">$16.1M</td>
             <td class="td-mono">SOFR+5.50%</td>
             <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:75%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">75%</span></div></td>
             <td><span class="badge badge-green">Active</span></td>
           </tr>
-          <tr onclick="nav('loans')" style="cursor:pointer">
+          <tr class="bank-row" data-bank="BIC-BRED" data-region="Europe" onclick="navToBank('BIC-BRED')" style="cursor:pointer" title="View BIC-BRED loans">
             <td><strong>BIC-BRED</strong><br/><span style="font-size:11px;color:var(--text3)">Banque Commerce, Geneva</span></td>
             <td><span class="badge badge-gray">Europe</span></td>
-            <td class="td-mono">$25.0M</td>
-            <td class="td-mono">$16.0M</td>
+            <td class="td-mono">$25.0M</td><td class="td-mono">$16.0M</td>
             <td class="td-mono" style="color:var(--accent)">$9.0M</td>
             <td class="td-mono">COF+4.00%</td>
             <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:64%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">64%</span></div></td>
             <td><span class="badge badge-green">Active</span></td>
           </tr>
-          <tr onclick="nav('loans')" style="cursor:pointer">
+          <tr class="bank-row" data-bank="BCGE" data-region="Europe" onclick="navToBank('BCGE')" style="cursor:pointer" title="View BCGE loans">
             <td><strong>BCGE</strong><br/><span style="font-size:11px;color:var(--text3)">Banque Cantonale Genève</span></td>
             <td><span class="badge badge-gray">Europe</span></td>
-            <td class="td-mono">$50.0M</td>
-            <td class="td-mono">$33.2M</td>
+            <td class="td-mono">$50.0M</td><td class="td-mono">$33.2M</td>
             <td class="td-mono" style="color:var(--accent)">$16.8M</td>
             <td class="td-mono">SOFR+4.50%</td>
             <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:66%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">66%</span></div></td>
             <td><span class="badge badge-green">Active</span></td>
           </tr>
-          <tr onclick="nav('loans')" style="cursor:pointer">
+          <tr class="bank-row" data-bank="CEB" data-region="Europe" onclick="navToBank('CEB')" style="cursor:pointer" title="View CEB loans">
             <td><strong>CEB</strong><br/><span style="font-size:11px;color:var(--text3)">Credit Europe Bank</span></td>
             <td><span class="badge badge-gray">Europe</span></td>
-            <td class="td-mono">$30.0M</td>
-            <td class="td-mono">$26.8M</td>
+            <td class="td-mono">$30.0M</td><td class="td-mono">$26.8M</td>
             <td class="td-mono" style="color:var(--accent)">$3.2M</td>
             <td class="td-mono">SOFR+4.25%</td>
             <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill amber" style="width:89%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">89%</span></div></td>
             <td><span class="badge badge-green">Active</span></td>
           </tr>
-          <tr>
+          <tr class="bank-row" data-bank="ZENITH" data-region="Other" onclick="navToBank('ZENITH')" style="cursor:pointer" title="View ZENITH loans">
             <td><strong>ZENITH</strong></td>
             <td><span class="badge badge-gray">Other</span></td>
-            <td class="td-mono">$18.0M</td>
-            <td class="td-mono">$14.2M</td>
+            <td class="td-mono">$18.0M</td><td class="td-mono">$14.2M</td>
             <td class="td-mono" style="color:var(--accent)">$3.8M</td>
             <td class="td-mono">SOFR+4.80%</td>
             <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill amber" style="width:79%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">79%</span></div></td>
             <td><span class="badge badge-green">Active</span></td>
           </tr>
-          <tr>
+          <tr class="bank-row" data-bank="BOC" data-region="Asia" onclick="navToBank('BOC')" style="cursor:pointer" title="View BOC loans">
             <td><strong>BOC</strong><br/><span style="font-size:11px;color:var(--text3)">Bank of China</span></td>
             <td><span class="badge badge-blue">Asia</span></td>
-            <td class="td-mono">$22.0M</td>
-            <td class="td-mono">$19.7M</td>
+            <td class="td-mono">$22.0M</td><td class="td-mono">$19.7M</td>
             <td class="td-mono" style="color:var(--accent)">$2.3M</td>
             <td class="td-mono">SOFR+4.50%</td>
             <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill amber" style="width:89%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">89%</span></div></td>
             <td><span class="badge badge-green">Active</span></td>
           </tr>
-          <tr>
-            <td colspan="8" style="text-align:center;color:var(--text3);font-size:12px;padding:10px">+ 12 more banks (INVESTEC, ABSA, DPW, WESTLAKE, NEDBANK, GARANTIBANK, CITIBANK, AMERRA, BCV, TRADEX, CHALLENGER, SBSA Notes)</td>
+          <tr class="bank-row" data-bank="INVESTEC" data-region="Africa" onclick="navToBank('INVESTEC')" style="cursor:pointer" title="View INVESTEC loans">
+            <td><strong>INVESTEC</strong></td>
+            <td><span class="badge badge-blue">Africa</span></td>
+            <td class="td-mono">$43.0M</td><td class="td-mono">$20.0M</td>
+            <td class="td-mono" style="color:var(--accent)">$23.0M</td>
+            <td class="td-mono">SOFR+4.60%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:47%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">47%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="ABSA" data-region="Africa" onclick="navToBank('ABSA')" style="cursor:pointer" title="View ABSA loans">
+            <td><strong>ABSA</strong></td>
+            <td><span class="badge badge-blue">Africa</span></td>
+            <td class="td-mono">$8.0M</td><td class="td-mono">$1.6M</td>
+            <td class="td-mono" style="color:var(--accent)">$6.4M</td>
+            <td class="td-mono">SOFR+4.40%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:20%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">20%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="CITIBANK" data-region="Other" onclick="navToBank('CITIBANK')" style="cursor:pointer" title="View CITIBANK loans">
+            <td><strong>CITIBANK</strong></td>
+            <td><span class="badge badge-gray">Other</span></td>
+            <td class="td-mono">$15.0M</td><td class="td-mono">$9.2M</td>
+            <td class="td-mono" style="color:var(--accent)">$5.8M</td>
+            <td class="td-mono">SOFR+4.20%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:61%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">61%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
           </tr>
         </tbody>
       </table>
@@ -475,121 +490,56 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 <!-- ══════════════════════════════════════════ -->
 <div class="page" id="page-loans">
   <div class="page-header">
-    <div><div class="page-title">Loan Register</div><div class="page-sub">All active drawdowns · interest auto-calculated daily</div></div>
-    <button class="btn btn-primary btn-sm" onclick="openModal('modal-loan')">+ New drawdown</button>
+    <div>
+      <div class="page-title" id="loans-page-title">Loan Register</div>
+      <div class="page-sub" id="loans-page-sub">All active drawdowns · interest auto-calculated daily</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn btn-ghost btn-sm" id="loans-back-btn" onclick="navToBank('All')" style="display:none">← All banks</button>
+      <button class="btn btn-primary btn-sm" onclick="openModal('modal-loan')">+ New drawdown</button>
+    </div>
   </div>
   <div class="section">
-
     <div class="search-bar">
       <span class="search-icon">⌕</span>
-      <input type="text" placeholder="Search by bank, reference, cost centre…" style="padding-left:32px"/>
+      <input type="text" id="loan-search" oninput="filterLoans()" placeholder="Search by reference, cost centre…" style="padding-left:32px"/>
     </div>
-
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;width:fit-content" id="loan-bank-tabs">
+      <div class="tab active" onclick="setLoanBank('All',this)">All banks</div>
+      <div class="tab" onclick="setLoanBank('TDB',this)">TDB</div>
+      <div class="tab" onclick="setLoanBank('BIC-BRED',this)">BIC-BRED</div>
+      <div class="tab" onclick="setLoanBank('SBSA',this)">SBSA</div>
+      <div class="tab" onclick="setLoanBank('JTI',this)">JTI</div>
+      <div class="tab" onclick="setLoanBank('AFREXIM',this)">AFREXIM</div>
+      <div class="tab" onclick="setLoanBank('BCGE',this)">BCGE</div>
+      <div class="tab" onclick="setLoanBank('CEB',this)">CEB</div>
+      <div class="tab" onclick="setLoanBank('BOC',this)">BOC</div>
+      <div class="tab" onclick="setLoanBank('INVESTEC',this)">INVESTEC</div>
+      <div class="tab" onclick="setLoanBank('ZENITH',this)">ZENITH</div>
+      <div class="tab" onclick="setLoanBank('ABSA',this)">ABSA</div>
+      <div class="tab" onclick="setLoanBank('CITIBANK',this)">CITIBANK</div>
+    </div>
+    <div id="loan-bank-strip" style="display:none;background:var(--accent);color:#fff;border-radius:var(--radius);padding:14px 20px;margin-bottom:16px;grid-template-columns:repeat(4,1fr);gap:0">
+      <div class="strip-item"><div class="strip-label">Outstanding</div><div class="strip-val" id="bstrip-bal">—</div></div>
+      <div class="strip-item"><div class="strip-label">Facility limit</div><div class="strip-val" id="bstrip-limit">—</div></div>
+      <div class="strip-item"><div class="strip-label">Rate</div><div class="strip-val" id="bstrip-rate">—</div></div>
+      <div class="strip-item"><div class="strip-label">Active loans</div><div class="strip-val" id="bstrip-count">—</div></div>
+    </div>
     <div class="table-wrap">
       <div class="table-header">
-        <span class="table-title">Active loans</span>
-        <div class="tabs" style="margin:0">
-          <div class="tab active">All</div>
-          <div class="tab">BIC-BRED</div>
-          <div class="tab">TDB</div>
-          <div class="tab">SBSA</div>
-        </div>
+        <span class="table-title" id="loans-table-title">All loans</span>
+        <span id="loans-count-badge" class="badge badge-gray" style="font-family:'DM Mono',monospace"></span>
       </div>
       <table>
         <thead><tr>
-          <th>Ref / Bank</th><th>Stage / Type</th><th>Cost Centre</th><th>Principal (USD)</th><th>Rate p.a.</th><th>Interest (Apr)</th><th>Due Date</th><th>Status</th><th></th>
+          <th>Reference</th><th>Bank</th><th>Stage / Type</th><th>Cost Centre</th><th>Principal (USD)</th><th>Rate p.a.</th><th>Interest (Apr)</th><th>Due Date</th><th>Status</th><th></th>
         </tr></thead>
-        <tbody>
-          <tr>
-            <td><span class="td-mono" style="font-size:11px;color:var(--text3)">TDB/ZIM/PRE/26/001</span><br/><strong>TDB</strong></td>
-            <td><span class="badge badge-blue">Stage 1 · Pre-crop</span></td>
-            <td><span class="badge badge-gray">2-ZIM</span></td>
-            <td class="td-mono"><strong>$30,000,000</strong></td>
-            <td class="td-mono">10.85%</td>
-            <td class="td-mono" style="color:var(--accent)">$270,750</td>
-            <td class="td-mono" style="font-size:11.5px">30 Jun 2026</td>
-            <td><span class="badge badge-green">Outstanding</span></td>
-            <td><button class="btn btn-ghost btn-sm" onclick="openModal('modal-loan-detail')">View</button></td>
-          </tr>
-          <tr>
-            <td><span class="td-mono" style="font-size:11px;color:var(--text3)">ZIM/TDB/PREM/26/G/001</span><br/><strong>TDB</strong></td>
-            <td><span class="badge badge-amber">Stage 2 · Green</span></td>
-            <td><span class="badge badge-gray">2-ZIM</span></td>
-            <td class="td-mono"><strong>$7,149,368</strong></td>
-            <td class="td-mono">10.85%</td>
-            <td class="td-mono" style="color:var(--accent)">$64,592</td>
-            <td class="td-mono" style="font-size:11.5px">15 May 2026</td>
-            <td><span class="badge badge-amber">Due soon</span></td>
-            <td><button class="btn btn-ghost btn-sm" onclick="openModal('modal-loan-detail')">View</button></td>
-          </tr>
-          <tr>
-            <td><span class="td-mono" style="font-size:11px;color:var(--text3)">ZIM/TDB/PREM/23&25/P/290</span><br/><strong>TDB</strong></td>
-            <td><span class="badge badge-green">Stage 4 · Processed</span></td>
-            <td><span class="badge badge-gray">2-ZIM</span></td>
-            <td class="td-mono"><strong>$11,254,493</strong></td>
-            <td class="td-mono">10.85%</td>
-            <td class="td-mono" style="color:var(--accent)">$101,673</td>
-            <td class="td-mono" style="font-size:11.5px">31 May 2026</td>
-            <td><span class="badge badge-green">Outstanding</span></td>
-            <td><button class="btn btn-ghost btn-sm" onclick="openModal('modal-loan-detail')">View</button></td>
-          </tr>
-          <tr>
-            <td><span class="td-mono" style="font-size:11px;color:var(--text3)">BIC/BRA/L2/SL3.2/042</span><br/><strong>BIC-BRED</strong></td>
-            <td><span class="badge badge-blue">L2 · Sub-limit 3.2</span></td>
-            <td><span class="badge badge-gray">1-BRA</span></td>
-            <td class="td-mono"><strong>$8,719,600</strong></td>
-            <td class="td-mono">7.25%</td>
-            <td class="td-mono" style="color:var(--accent)">$52,736</td>
-            <td class="td-mono" style="font-size:11.5px">10 Jun 2026</td>
-            <td><span class="badge badge-green">Outstanding</span></td>
-            <td><button class="btn btn-ghost btn-sm" onclick="openModal('modal-loan-detail')">View</button></td>
-          </tr>
-          <tr>
-            <td><span class="td-mono" style="font-size:11px;color:var(--text3)">BIC/TAN/L2/SL3.2/021</span><br/><strong>BIC-BRED</strong></td>
-            <td><span class="badge badge-blue">L2 · Tanzania</span></td>
-            <td><span class="badge badge-gray">2-TAN</span></td>
-            <td class="td-mono"><strong>$6,718,372</strong></td>
-            <td class="td-mono">7.25%</td>
-            <td class="td-mono" style="color:var(--accent)">$40,598</td>
-            <td class="td-mono" style="font-size:11.5px">22 May 2026</td>
-            <td><span class="badge badge-amber">Due soon</span></td>
-            <td><button class="btn btn-ghost btn-sm" onclick="openModal('modal-loan-detail')">View</button></td>
-          </tr>
-          <tr>
-            <td><span class="td-mono" style="font-size:11px;color:var(--text3)">SBSA/ZIM/20M/FY26/018</span><br/><strong>SBSA</strong></td>
-            <td><span class="badge badge-gray">Revolving</span></td>
-            <td><span class="badge badge-gray">2-ZIM</span></td>
-            <td class="td-mono"><strong>$20,000,000</strong></td>
-            <td class="td-mono">10.35%</td>
-            <td class="td-mono" style="color:var(--accent)">$172,500</td>
-            <td class="td-mono" style="font-size:11.5px">30 Apr 2026</td>
-            <td><span class="badge badge-red">Overdue</span></td>
-            <td><button class="btn btn-ghost btn-sm" onclick="openModal('modal-loan-detail')">View</button></td>
-          </tr>
-          <tr>
-            <td><span class="td-mono" style="font-size:11px;color:var(--text3)">BCGE/BRA/FY26/011</span><br/><strong>BCGE</strong></td>
-            <td><span class="badge badge-gray">Term loan</span></td>
-            <td><span class="badge badge-gray">1-BRA</span></td>
-            <td class="td-mono"><strong>$12,239,067</strong></td>
-            <td class="td-mono">9.85%</td>
-            <td class="td-mono" style="color:var(--accent)">$100,464</td>
-            <td class="td-mono" style="font-size:11.5px">15 Jul 2026</td>
-            <td><span class="badge badge-green">Outstanding</span></td>
-            <td><button class="btn btn-ghost btn-sm" onclick="openModal('modal-loan-detail')">View</button></td>
-          </tr>
-          <tr>
-            <td><span class="td-mono" style="font-size:11px;color:var(--text3)">JTI/ZIM/FX/FY26/004</span><br/><strong>JTI</strong></td>
-            <td><span class="badge badge-gray">Fixed rate</span></td>
-            <td><span class="badge badge-gray">2-ZIM</span></td>
-            <td class="td-mono"><strong>$39,107,152</strong></td>
-            <td class="td-mono">7.50%</td>
-            <td class="td-mono" style="color:var(--accent)">$244,420</td>
-            <td class="td-mono" style="font-size:11.5px">31 Mar 2027</td>
-            <td><span class="badge badge-green">Outstanding</span></td>
-            <td><button class="btn btn-ghost btn-sm" onclick="openModal('modal-loan-detail')">View</button></td>
-          </tr>
-        </tbody>
+        <tbody id="loans-tbody"></tbody>
       </table>
+      <div id="loans-empty" style="display:none;text-align:center;padding:32px;color:var(--text3)">
+        <div style="font-size:28px;margin-bottom:8px">◇</div>
+        <div id="loans-empty-msg">No loans found for this bank</div>
+      </div>
     </div>
   </div>
 </div>
@@ -1021,6 +971,185 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 </div>
 
 <script>
+// ── LOAN DATA ──────────────────────────────────────────────────────────
+const ALL_LOANS = [
+  {ref:'TDB/ZIM/PRE/26/001',    bank:'TDB',      type:'Stage 1 · Pre-crop',    cc:'2-ZIM', principal:30000000, rate:'10.85%', interest:'$270,750',  due:'30 Jun 2026', status:'outstanding'},
+  {ref:'ZIM/TDB/PREM/26/G/001', bank:'TDB',      type:'Stage 2 · Green',       cc:'2-ZIM', principal:7149368,  rate:'10.85%', interest:'$64,592',   due:'15 May 2026', status:'due-soon'},
+  {ref:'ZIM/TDB/PREM/23&25/P/290',bank:'TDB',    type:'Stage 4 · Processed',   cc:'2-ZIM', principal:11254493, rate:'10.85%', interest:'$101,673',  due:'31 May 2026', status:'outstanding'},
+  {ref:'TDB/MAL/PRE/26/002',    bank:'TDB',      type:'Stage 1 · Pre-crop',    cc:'2-MAL', principal:3500000,  rate:'10.85%', interest:'$31,625',   due:'30 Jun 2026', status:'outstanding'},
+  {ref:'MW/TDB/PREM/25/P/10',   bank:'TDB',      type:'Stage 4 · Processed',   cc:'2-MAL', principal:448443,   rate:'10.85%', interest:'$4,051',    due:'15 Jun 2026', status:'outstanding'},
+  {ref:'BIC/BRA/L2/SL3.2/042',  bank:'BIC-BRED', type:'L2 · Brazil',           cc:'1-BRA', principal:8719600,  rate:'7.25%',  interest:'$52,736',   due:'10 Jun 2026', status:'outstanding'},
+  {ref:'BIC/TAN/L2/SL3.2/021',  bank:'BIC-BRED', type:'L2 · Tanzania',         cc:'2-TAN', principal:6718372,  rate:'7.25%',  interest:'$40,598',   due:'22 May 2026', status:'due-soon'},
+  {ref:'BIC/ZIM/L2/SL3.1/018',  bank:'BIC-BRED', type:'L2 · Zimbabwe',         cc:'2-ZIM', principal:559932,   rate:'9.25%',  interest:'$4,323',    due:'30 Jun 2026', status:'outstanding'},
+  {ref:'SBSA/ZIM/20M/FY26/018', bank:'SBSA',     type:'Revolving',             cc:'2-ZIM', principal:20000000, rate:'10.35%', interest:'$172,500',  due:'30 Apr 2026', status:'overdue'},
+  {ref:'SBSA/ZIM/DISC/FY26/031',bank:'SBSA',     type:'Discount facility',     cc:'2-ZIM', principal:45000000, rate:'10.35%', interest:'$388,125',  due:'15 Jun 2026', status:'outstanding'},
+  {ref:'SBSA/BRA/FY26/009',     bank:'SBSA',     type:'Term loan',             cc:'1-BRA', principal:28000000, rate:'10.35%', interest:'$241,500',  due:'31 Jul 2026', status:'outstanding'},
+  {ref:'SBSA/MAL/FY26/005',     bank:'SBSA',     type:'Term loan',             cc:'2-MAL', principal:14259836, rate:'10.35%', interest:'$122,991',  due:'30 May 2026', status:'due-soon'},
+  {ref:'JTI/ZIM/FX/FY26/004',   bank:'JTI',      type:'Fixed rate',            cc:'2-ZIM', principal:39107152, rate:'7.50%',  interest:'$244,420',  due:'31 Mar 2027', status:'outstanding'},
+  {ref:'AFREXIM/ZIM/FY26/012',  bank:'AFREXIM',  type:'Structured',            cc:'2-ZIM', principal:23515000, rate:'10.10%', interest:'$197,826',  due:'30 Sep 2026', status:'outstanding'},
+  {ref:'AFREXIM/MAL/FY26/003',  bank:'AFREXIM',  type:'Structured',            cc:'2-MAL', principal:14175000, rate:'10.10%', interest:'$119,225',  due:'30 Aug 2026', status:'outstanding'},
+  {ref:'BCGE/BRA/FY26/011',     bank:'BCGE',     type:'Term loan',             cc:'1-BRA', principal:12239067, rate:'9.85%',  interest:'$100,464',  due:'15 Jul 2026', status:'outstanding'},
+  {ref:'BCGE/ZIM/FY26/007',     bank:'BCGE',     type:'Term loan',             cc:'2-ZIM', principal:20911939, rate:'9.85%',  interest:'$171,480',  due:'31 Aug 2026', status:'outstanding'},
+  {ref:'CEB/ZIM/FY26/006',      bank:'CEB',      type:'Term loan',             cc:'2-ZIM', principal:26774300, rate:'9.60%',  interest:'$213,828',  due:'30 Sep 2026', status:'outstanding'},
+  {ref:'BOC/BRA/FY26/008',      bank:'BOC',      type:'Trade finance',         cc:'1-BRA', principal:19721465, rate:'8.95%',  interest:'$147,105',  due:'30 Jun 2026', status:'outstanding'},
+  {ref:'INVESTEC/ZIM/FY26/010', bank:'INVESTEC', type:'Term loan',             cc:'2-ZIM', principal:20000000, rate:'9.95%',  interest:'$165,833',  due:'31 Jul 2026', status:'outstanding'},
+  {ref:'ZENITH/ZIM/FY26/014',   bank:'ZENITH',   type:'Revolving',             cc:'2-ZIM', principal:14195090, rate:'10.15%', interest:'$120,034',  due:'30 Jun 2026', status:'outstanding'},
+  {ref:'ABSA/BRA/FY26/002',     bank:'ABSA',     type:'Term loan',             cc:'1-BRA', principal:1600200,  rate:'9.75%',  interest:'$13,002',   due:'31 May 2026', status:'due-soon'},
+  {ref:'CITIBANK/ZIM/FY26/016', bank:'CITIBANK', type:'Trade finance',         cc:'2-ZIM', principal:9207938,  rate:'9.60%',  interest:'$73,543',   due:'30 Jun 2026', status:'outstanding'},
+];
+
+// Bank meta info for the summary strip
+const BANK_META = {
+  'TDB':      {bal:'$48.9M', limit:'$65.0M', rate:'SOFR+5.50%'},
+  'BIC-BRED': {bal:'$16.0M', limit:'$25.0M', rate:'COF+4.00%'},
+  'SBSA':     {bal:'$107.3M',limit:'$122.0M',rate:'SOFR+5.00%'},
+  'JTI':      {bal:'$39.1M', limit:'$40.0M', rate:'Fixed 7.50%'},
+  'AFREXIM':  {bal:'$37.7M', limit:'$40.0M', rate:'SOFR+4.75%'},
+  'BCGE':     {bal:'$33.2M', limit:'$50.0M', rate:'SOFR+4.50%'},
+  'CEB':      {bal:'$26.8M', limit:'$30.0M', rate:'SOFR+4.25%'},
+  'BOC':      {bal:'$19.7M', limit:'$22.0M', rate:'SOFR+4.50%'},
+  'INVESTEC': {bal:'$20.0M', limit:'$43.0M', rate:'SOFR+4.60%'},
+  'ZENITH':   {bal:'$14.2M', limit:'$18.0M', rate:'SOFR+4.80%'},
+  'ABSA':     {bal:'$1.6M',  limit:'$8.0M',  rate:'SOFR+4.40%'},
+  'CITIBANK': {bal:'$9.2M',  limit:'$15.0M', rate:'SOFR+4.20%'},
+};
+
+let currentLoanBank = 'All';
+let currentLoanSearch = '';
+
+// ── BADGE HELPERS ──────────────────────────────────────────────────────
+function stageBadge(type) {
+  const t = type.toLowerCase();
+  if (t.includes('stage 1') || t.includes('pre-crop')) return 'badge-blue';
+  if (t.includes('stage 2') || t.includes('green'))   return 'badge-amber';
+  if (t.includes('stage 4') || t.includes('processed')) return 'badge-green';
+  if (t.includes('stage 5') || t.includes('transit')) return 'badge-gray';
+  if (t.includes('stage 6') || t.includes('receiv'))  return 'badge-blue';
+  return 'badge-gray';
+}
+function statusBadge(s) {
+  if (s === 'overdue')    return '<span class="badge badge-red">Overdue</span>';
+  if (s === 'due-soon')   return '<span class="badge badge-amber">Due soon</span>';
+  return '<span class="badge badge-green">Outstanding</span>';
+}
+function fmtPrincipal(n) {
+  return '$' + n.toLocaleString();
+}
+
+// ── RENDER LOANS TABLE ─────────────────────────────────────────────────
+function renderLoans() {
+  const tbody = document.getElementById('loans-tbody');
+  const empty = document.getElementById('loans-empty');
+  const countBadge = document.getElementById('loans-count-badge');
+  const tableTitle = document.getElementById('loans-table-title');
+
+  const search = currentLoanSearch.toLowerCase();
+  const filtered = ALL_LOANS.filter(l => {
+    const bankMatch = currentLoanBank === 'All' || l.bank === currentLoanBank;
+    const searchMatch = !search ||
+      l.ref.toLowerCase().includes(search) ||
+      l.bank.toLowerCase().includes(search) ||
+      l.cc.toLowerCase().includes(search) ||
+      l.type.toLowerCase().includes(search);
+    return bankMatch && searchMatch;
+  });
+
+  tableTitle.textContent = currentLoanBank === 'All' ? 'All loans' : currentLoanBank + ' loans';
+  countBadge.textContent = filtered.length + ' loan' + (filtered.length !== 1 ? 's' : '');
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    document.getElementById('loans-empty-msg').textContent =
+      currentLoanBank !== 'All' ? 'No loans found for ' + currentLoanBank : 'No loans match your search';
+    return;
+  }
+
+  empty.style.display = 'none';
+  tbody.innerHTML = filtered.map(l => `
+    <tr>
+      <td><span class="td-mono" style="font-size:11px;color:var(--text3)">${l.ref}</span></td>
+      <td><strong>${l.bank}</strong></td>
+      <td><span class="badge ${stageBadge(l.type)}">${l.type}</span></td>
+      <td><span class="badge badge-gray">${l.cc}</span></td>
+      <td class="td-mono"><strong>${fmtPrincipal(l.principal)}</strong></td>
+      <td class="td-mono">${l.rate}</td>
+      <td class="td-mono" style="color:var(--accent)">${l.interest}</td>
+      <td class="td-mono" style="font-size:11.5px">${l.due}</td>
+      <td>${statusBadge(l.status)}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="openModal('modal-loan-detail')">View</button></td>
+    </tr>
+  `).join('');
+}
+
+// ── SET BANK FILTER ────────────────────────────────────────────────────
+function setLoanBank(bank, clickedTab) {
+  currentLoanBank = bank;
+
+  // Update tabs
+  document.querySelectorAll('#loan-bank-tabs .tab').forEach(t => t.classList.remove('active'));
+  if (clickedTab) clickedTab.classList.add('active');
+
+  // Bank summary strip
+  const strip = document.getElementById('loan-bank-strip');
+  const backBtn = document.getElementById('loans-back-btn');
+  if (bank !== 'All' && BANK_META[bank]) {
+    const meta = BANK_META[bank];
+    const count = ALL_LOANS.filter(l => l.bank === bank).length;
+    document.getElementById('bstrip-bal').textContent = meta.bal;
+    document.getElementById('bstrip-limit').textContent = meta.limit;
+    document.getElementById('bstrip-rate').textContent = meta.rate;
+    document.getElementById('bstrip-count').textContent = count;
+    strip.style.display = 'grid';
+    backBtn.style.display = 'inline-flex';
+    document.getElementById('loans-page-title').textContent = bank + ' — Loans';
+    document.getElementById('loans-page-sub').textContent = 'Filtered by bank · ' + count + ' active loan' + (count !== 1 ? 's' : '');
+  } else {
+    strip.style.display = 'none';
+    backBtn.style.display = 'none';
+    document.getElementById('loans-page-title').textContent = 'Loan Register';
+    document.getElementById('loans-page-sub').textContent = 'All active drawdowns · interest auto-calculated daily';
+  }
+
+  renderLoans();
+}
+
+// ── SEARCH ─────────────────────────────────────────────────────────────
+function filterLoans() {
+  currentLoanSearch = document.getElementById('loan-search').value;
+  renderLoans();
+}
+
+// ── NAVIGATE FROM BANK ROW → LOANS FILTERED ───────────────────────────
+function navToBank(bank) {
+  nav('loans');
+  // Small delay so page is visible before we switch the tab
+  setTimeout(() => {
+    if (bank === 'All') {
+      const allTab = document.querySelector('#loan-bank-tabs .tab');
+      setLoanBank('All', allTab);
+    } else {
+      const tabs = document.querySelectorAll('#loan-bank-tabs .tab');
+      let target = null;
+      tabs.forEach(t => {
+        if (t.textContent.trim() === bank) target = t;
+      });
+      setLoanBank(bank, target);
+    }
+  }, 50);
+}
+
+// ── BANK REGION FILTER (Banks page) ───────────────────────────────────
+function filterBankRegion(region, clickedTab) {
+  document.querySelectorAll('#bank-region-tabs .tab').forEach(t => t.classList.remove('active'));
+  clickedTab.classList.add('active');
+  document.querySelectorAll('.bank-row').forEach(row => {
+    const r = row.getAttribute('data-region');
+    row.style.display = (region === 'All' || r === region) ? '' : 'none';
+  });
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────
 function nav(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -1032,15 +1161,16 @@ function nav(page) {
   });
   document.querySelector('.main').scrollTo(0, 0);
 }
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
 document.querySelectorAll('.modal-backdrop').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
+
+// ── INIT ───────────────────────────────────────────────────────────────
+renderLoans();
 </script>
 </body>
 </html>
