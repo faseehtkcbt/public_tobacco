@@ -504,7 +504,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
   <div class="section">
     <div class="search-bar">
       <span class="search-icon">⌕</span>
-      <input type="text" id="loan-search" oninput="filterLoans()" placeholder="Search by reference, cost centre…" style="padding-left:32px"/>
+      <input type="text" id="loan-search" oninput="filterLoans()" placeholder="Search by Loan reference, cost centre…" style="padding-left:32px"/>
     </div>
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;width:fit-content" id="loan-bank-tabs">
       <div class="tab active" onclick="setLoanBank('All',this)">All banks</div>
@@ -534,7 +534,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
       </div>
       <div style="overflow-x:auto"><table style="min-width:1050px">
         <thead><tr>
-          <th>Reference</th><th>Bank</th><th>Stage / Type</th><th>Cost Centre</th><th>Principal (USD)</th><th>Rate p.a.</th><th>Interest (Apr)</th><th>Due Date</th><th>Status</th><th style="min-width:60px">Action</th>
+          <th>Loan Reference</th><th>Bank</th><th>Stage / Type</th><th>Cost Centre</th><th>Principal (USD)</th><th>Rate p.a.</th><th>Interest (Apr)</th><th>Due Date</th><th>Status</th><th style="min-width:60px">Action</th>
         </tr></thead>
         <tbody id="loans-tbody"></tbody>
       </table></div>
