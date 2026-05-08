@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PTID — Loan Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F5F4F0;
+  --surface:#FFFFFF;
+  --surface2:#F9F8F5;
+  --border:#E4E2DA;
+  --border2:#D0CEC5;
+  --text:#1A1917;
+  --text2:#6B6860;
+  --text3:#9E9C96;
+  --accent:#1C4B3A;
+  --accent-light:#EAF2EE;
+  --accent2:#B8860B;
+  --accent2-light:#FDF6E3;
+  --red:#C0392B;
+  --red-light:#FDECEA;
+  --blue:#1A4B7A;
+  --blue-light:#EAF0F8;
+  --amber:#9A6B00;
+  --amber-light:#FFF8E1;
+  --radius:10px;
+  --radius-sm:6px;
+  --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.08),0 2px 4px rgba(0,0,0,0.04);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
+/* LAYOUT */
+.app{display:grid;grid-template-columns:220px 1fr;grid-template-rows:auto 1fr;min-height:100vh;overflow:hidden}
+/* TOPBAR */
+.topbar{grid-column:1/-1;background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;letter-spacing:-0.3px}
+.logo-mark{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;letter-spacing:.5px}
+.topbar-right{display:flex;align-items:center;gap:16px}
+.fy-badge{background:var(--accent-light);color:var(--accent);font-size:12px;font-weight:500;padding:4px 10px;border-radius:20px}
+.portfolio-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text2);font-family:'DM Mono',monospace}
+/* SIDEBAR */
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:16px 0;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto}
+.nav-section{margin-bottom:4px}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:.8px;color:var(--text3);padding:8px 16px 4px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 16px;cursor:pointer;border-radius:0;transition:all .15s;color:var(--text2);font-size:13.5px;font-weight:400;border-left:2px solid transparent;margin:0 0 1px}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--accent-light);color:var(--accent);font-weight:500;border-left-color:var(--accent)}
+.nav-icon{font-size:16px;width:18px;text-align:center;opacity:.7}
+.nav-item.active .nav-icon{opacity:1}
+.nav-count{margin-left:auto;background:var(--border);color:var(--text2);font-size:10px;padding:2px 6px;border-radius:10px;font-family:'DM Mono',monospace}
+/* MAIN */
+.main{padding:0;overflow-y:auto;overflow-x:hidden}
+.page{display:none;animation:fadeIn .2s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+/* PAGE HEADER */
+.page-header{padding:24px 28px 0;display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.page-title{font-size:20px;font-weight:600;letter-spacing:-.4px;color:var(--text)}
+.page-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .15s;font-family:'DM Sans',sans-serif}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:#163d2f}
+.btn-ghost{background:transparent;color:var(--text2);border-color:var(--border)}
+.btn-ghost:hover{background:var(--surface2);color:var(--text)}
+.btn-sm{padding:5px 11px;font-size:12px}
+/* SECTION */
+.section{padding:0 28px 24px;min-width:0}
+/* METRIC CARDS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+.metric-label{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px}
+.metric-value{font-size:22px;font-weight:600;letter-spacing:-.6px;color:var(--text);font-family:'DM Mono',monospace}
+.metric-value.green{color:var(--accent)}
+.metric-value.amber{color:var(--amber)}
+.metric-value.red{color:var(--red)}
+.metric-sub{font-size:11px;color:var(--text3);margin-top:4px;display:flex;align-items:center;gap:4px}
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.dot.green{background:var(--accent)}
+.dot.amber{background:var(--amber2,#E6A817)}
+.dot.red{background:var(--red)}
+/* TABLES */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.table-wrap table{min-width:100%}
+.table-scroll{overflow-x:auto;overflow-y:visible}
+.table-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.table-title{font-size:13.5px;font-weight:600;color:var(--text)}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2)}
+td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAF8}
+.td-mono{font-family:'DM Mono',monospace;font-size:12.5px}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-green{background:var(--accent-light);color:var(--accent)}
+.badge-amber{background:var(--amber-light);color:var(--amber)}
+.badge-red{background:var(--red-light);color:var(--red)}
+.badge-blue{background:var(--blue-light);color:var(--blue)}
+.badge-gray{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+/* PROGRESS BAR */
+.prog-wrap{background:var(--border);border-radius:4px;height:5px;overflow:hidden;width:100px}
+.prog-fill{height:100%;border-radius:4px;transition:width .5s}
+.prog-fill.green{background:var(--accent)}
+.prog-fill.amber{background:#E6A817}
+.prog-fill.red{background:var(--red)}
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:999}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--surface);border-radius:14px;padding:28px;width:580px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.modal-title{font-size:17px;font-weight:600;letter-spacing:-.3px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between}
+.modal-close{cursor:pointer;color:var(--text3);font-size:20px;line-height:1;padding:4px}
+.modal-close:hover{color:var(--text)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+label{font-size:12px;font-weight:500;color:var(--text2)}
+input,select,textarea{font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 11px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);outline:none;transition:border .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;padding-top:16px;border-top:1px solid var(--border)}
+/* TIMELINE / MOVEMENT */
+.movement-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.movement-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.movement-card-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.movement-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.movement-item:last-child{border-bottom:none}
+.movement-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.movement-info{flex:1}
+.movement-name{font-size:13px;font-weight:500;color:var(--text)}
+.movement-meta{font-size:11.5px;color:var(--text3);margin-top:1px}
+.movement-amount{font-family:'DM Mono',monospace;font-size:12.5px;font-weight:500;text-align:right}
+/* STAGE FLOW */
+.stage-flow{display:flex;align-items:center;gap:0;margin:20px 0;overflow-x:auto;padding-bottom:4px}
+.stage-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;min-width:130px;text-align:center;position:relative;cursor:pointer;transition:all .2s}
+.stage-box:hover{border-color:var(--accent);background:var(--accent-light)}
+.stage-box.active-stage{background:var(--accent);color:#fff;border-color:var(--accent)}
+.stage-box.active-stage .stage-name,.stage-box.active-stage .stage-sub,.stage-box.active-stage .stage-amount{color:#fff !important;opacity:1}
+.stage-arrow{color:var(--border2);font-size:18px;padding:0 4px;flex-shrink:0}
+.stage-num{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.stage-name{font-size:12.5px;font-weight:600;color:var(--text)}
+.stage-sub{font-size:11px;color:var(--text2);margin-top:2px}
+.stage-amount{font-family:'DM Mono',monospace;font-size:12px;color:var(--accent);font-weight:500;margin-top:4px}
+/* UTILISATION BARS */
+.util-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.util-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.util-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.util-bank{font-size:13px;font-weight:600;color:var(--text)}
+.util-pct{font-family:'DM Mono',monospace;font-size:12px;color:var(--text2)}
+.util-bar{background:var(--border);border-radius:4px;height:6px;overflow:hidden;margin-bottom:6px}
+.util-fill{height:100%;border-radius:4px}
+.util-detail{display:flex;justify-content:space-between;font-size:11px;color:var(--text3)}
+/* COLLATERAL */
+.whr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.whr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.whr-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.whr-ref{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)}
+.whr-name{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:2px}
+.whr-detail{font-size:12px;color:var(--text2)}
+.coverage-row{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.coverage-label{font-size:11px;color:var(--text3);margin-bottom:4px;display:flex;justify-content:space-between}
+/* TABS */
+.tabs{display:flex;gap:2px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;width:fit-content;margin-bottom:16px}
+.tab{padding:6px 14px;border-radius:6px;font-size:12.5px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .15s}
+.tab.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+/* SUMMARY STRIP */
+.summary-strip{background:var(--accent);color:#fff;border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;display:grid;grid-template-columns:repeat(5,1fr);gap:0}
+.strip-item{text-align:center;padding:0 16px;border-right:1px solid rgba(255,255,255,.15)}
+.strip-item:last-child{border-right:none}
+.strip-label{font-size:10px;font-weight:500;opacity:.7;letter-spacing:.4px;text-transform:uppercase;margin-bottom:4px}
+.strip-val{font-family:'DM Mono',monospace;font-size:16px;font-weight:600}
+.strip-sub{font-size:10px;opacity:.6;margin-top:2px}
+/* ALERT */
+.alert{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:var(--radius-sm);font-size:12.5px;margin-bottom:8px}
+.alert-amber{background:var(--amber-light);border:1px solid #F0D070;color:var(--amber)}
+.alert-red{background:var(--red-light);border:1px solid #F5B0A8;color:var(--red)}
+.alert-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+/* SEARCH BAR */
+.search-bar{position:relative;margin-bottom:14px}
+.search-bar input{width:100%;padding-left:32px;background:var(--surface)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px}
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-icon{font-size:32px;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<div class="app">
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-mark">PT</div>
+    <span>PTID Loan Management</span>
+  </div>
+  <div class="topbar-right">
+    <span class="fy-badge">FY 2026</span>
+    <span class="portfolio-pill">Portfolio: $489.9M</span>
+    <span style="font-size:12px;color:var(--text2)">Treasury · Finance</span>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item active" onclick="nav('dashboard')">
+      <span class="nav-icon">◈</span> Dashboard
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Management</div>
+    <div class="nav-item" onclick="nav('banks')">
+      <span class="nav-icon">⬡</span> Banks
+      <span class="nav-count">21</span>
+    </div>
+    <div class="nav-item" onclick="nav('loans')">
+      <span class="nav-icon">◇</span> Loans
+      <span class="nav-count">64</span>
+    </div>
+    <div class="nav-item" onclick="nav('collateral')">
+      <span class="nav-icon">◉</span> Warehouse & Collateral
+      <span class="nav-count">7</span>
+    </div>
+    <div class="nav-item" onclick="nav('movement')">
+      <span class="nav-icon">⟳</span> Movement Log
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Reporting</div>
+    <div class="nav-item" onclick="nav('interest')">
+      <span class="nav-icon">∑</span> Interest Accrual
+    </div>
+    <div class="nav-item" onclick="nav('allocation')">
+      <span class="nav-icon">⊞</span> Cost Allocation
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN AREA -->
+<main class="main">
+
+<!-- ══════════════════════════════════════════ -->
+<!-- DASHBOARD -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page active" id="page-dashboard">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Portfolio Dashboard</div>
+      <div class="page-sub">As at 17 April 2026 · All 21 banks · USD</div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="nav('movement')">View all movements →</button>
+  </div>
+  <div class="section">
+
+    <!-- SUMMARY STRIP -->
+    <div class="summary-strip">
+      <div class="strip-item"><div class="strip-label">Total Outstanding</div><div class="strip-val">$489.9M</div><div class="strip-sub">Closing balance</div></div>
+      <div class="strip-item"><div class="strip-label">Interest (Apr)</div><div class="strip-val">$4.54M</div><div class="strip-sub">Accrued this month</div></div>
+      <div class="strip-item"><div class="strip-label">Avg Rate p.a.</div><div class="strip-val">8.70%</div><div class="strip-sub">Blended SOFR+margin</div></div>
+      <div class="strip-item"><div class="strip-label">Collateral</div><div class="strip-val">$29.4M</div><div class="strip-sub">WHRs pledged</div></div>
+      <div class="strip-item"><div class="strip-label">Active Banks</div><div class="strip-val">21</div><div class="strip-sub">$178M undrawn</div></div>
+    </div>
+
+    <!-- ALERTS -->
+    <div class="alert alert-amber"><span class="alert-icon">⚠</span><div><strong>BIC-BRED Brazil sub-limit:</strong> $8.72M drawn vs $10M limit — only $1.28M headroom remaining.</div></div>
+    <div class="alert alert-red"><span class="alert-icon">⚠</span><div><strong>TDB Zimbabwe Stage 2:</strong> Collateral excess 85% threshold breached — $3.14M shortfall. WHR top-up required.</div></div>
+
+    <!-- METRICS -->
+    <div class="metrics" style="margin-top:14px">
+      <div class="metric">
+        <div class="metric-label">This Month Drawdowns</div>
+        <div class="metric-value green">$113.7M</div>
+        <div class="metric-sub"><span class="dot green"></span> April 2025</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">This Month Repayments</div>
+        <div class="metric-value amber">$110.4M</div>
+        <div class="metric-sub"><span class="dot amber"></span> Principal returned</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Cumulative Int. (YTD)</div>
+        <div class="metric-value" style="font-size:18px">$41.9M</div>
+        <div class="metric-sub"><span class="dot"></span> FY26 full year</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Unposted Accruals</div>
+        <div class="metric-value red">$2.88M</div>
+        <div class="metric-sub"><span class="dot red"></span> vs Business Central</div>
+      </div>
+    </div>
+
+    <!-- BANK UTILISATION -->
+    <div style="margin-bottom:20px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--text2)">Key bank utilisation</div>
+      <div class="util-grid">
+        <div class="util-item">
+          <div class="util-header"><span class="util-bank">SBSA</span><span class="util-pct">88%</span></div>
+          <div class="util-bar"><div class="util-fill" style="width:88%;background:var(--amber)"></div></div>
+          <div class="util-detail"><span>$107.3M drawn</span><span>$122M limit</span></div>
+        </div>
+        <div class="util-item">
+          <div class="util-header"><span class="util-bank">TDB</span><span class="util-pct">75%</span></div>
+          <div class="util-bar"><div class="util-fill" style="width:75%;background:var(--accent)"></div></div>
+          <div class="util-detail"><span>$48.9M drawn</span><span>$65M limit</span></div>
+        </div>
+        <div class="util-item">
+          <div class="util-header"><span class="util-bank">BIC-BRED</span><span class="util-pct">64%</span></div>
+          <div class="util-bar"><div class="util-fill" style="width:64%;background:var(--accent)"></div></div>
+          <div class="util-detail"><span>$16.0M drawn</span><span>$25M limit</span></div>
+        </div>
+        <div class="util-item">
+          <div class="util-header"><span class="util-bank">AFREXIM</span><span class="util-pct">95%</span></div>
+          <div class="util-bar"><div class="util-fill" style="width:95%;background:var(--red)"></div></div>
+          <div class="util-detail"><span>$37.7M drawn</span><span>$40M limit</span></div>
+        </div>
+        <div class="util-item">
+          <div class="util-header"><span class="util-bank">BCGE</span><span class="util-pct">66%</span></div>
+          <div class="util-bar"><div class="util-fill" style="width:66%;background:var(--accent)"></div></div>
+          <div class="util-detail"><span>$33.2M drawn</span><span>$50M limit</span></div>
+        </div>
+        <div class="util-item">
+          <div class="util-header"><span class="util-bank">JTI</span><span class="util-pct">98%</span></div>
+          <div class="util-bar"><div class="util-fill" style="width:98%;background:var(--red)"></div></div>
+          <div class="util-detail"><span>$39.1M drawn</span><span>$40M limit</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOBACCO LIFECYCLE STAGES -->
+    <div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text2)">TDB tobacco lifecycle — current utilisation</div>
+    <div class="stage-flow">
+      <div class="stage-box" onclick="nav('loans')"><div class="stage-num">Stage 1</div><div class="stage-name">Pre-Crop</div><div class="stage-sub">Clean loan</div><div class="stage-amount">$30.0M</div></div>
+      <span class="stage-arrow">›</span>
+      <div class="stage-box active-stage" onclick="nav('loans')"><div class="stage-num">Stage 2</div><div class="stage-name">Green Leaf</div><div class="stage-sub">WHR backed</div><div class="stage-amount">$7.1M</div></div>
+      <span class="stage-arrow">›</span>
+      <div class="stage-box" onclick="nav('loans')"><div class="stage-num">Stage 3</div><div class="stage-name">Trust Receipt</div><div class="stage-sub">Processing</div><div class="stage-amount">$0</div></div>
+      <span class="stage-arrow">›</span>
+      <div class="stage-box" onclick="nav('loans')"><div class="stage-num">Stage 4</div><div class="stage-name">Processed</div><div class="stage-sub">WHR backed</div><div class="stage-amount">$11.7M</div></div>
+      <span class="stage-arrow">›</span>
+      <div class="stage-box" onclick="nav('loans')"><div class="stage-num">Stage 5</div><div class="stage-name">In-Transit</div><div class="stage-sub">Shipping</div><div class="stage-amount">$0</div></div>
+      <span class="stage-arrow">›</span>
+      <div class="stage-box" onclick="nav('loans')"><div class="stage-num">Stage 6</div><div class="stage-name">Receivables</div><div class="stage-sub">Invoice assigned</div><div class="stage-amount">$0</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- BANKS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-banks">
+  <div class="page-header">
+    <div><div class="page-title">Bank Management</div><div class="page-sub">21 lending institutions · FY26 facilities</div></div>
+    <button class="btn btn-primary btn-sm" onclick="openModal('modal-bank')">+ Add bank</button>
+  </div>
+  <div class="section">
+    <div class="table-wrap">
+      <div class="table-header">
+        <span class="table-title">All facilities <span id="bank-region-label" style="font-weight:400;color:var(--text3)"></span></span>
+        <div style="display:flex;gap:8px">
+          <div class="tabs" style="margin:0" id="bank-region-tabs">
+            <div class="tab active" onclick="filterBankRegion('All',this)">All</div>
+            <div class="tab" onclick="filterBankRegion('Africa',this)">Africa</div>
+            <div class="tab" onclick="filterBankRegion('Europe',this)">Europe</div>
+            <div class="tab" onclick="filterBankRegion('Asia',this)">Asia</div>
+          </div>
+        </div>
+      </div>
+      <div style="overflow-x:auto"><table style="min-width:900px">
+        <thead><tr>
+          <th>Bank</th><th>Type / Region</th><th>Facility Limit</th><th>Outstanding</th><th>Undrawn</th><th>Rate</th><th>Utilisation</th><th>Status</th>
+        </tr></thead>
+        <tbody id="banks-tbody">
+          <tr class="bank-row" data-bank="SBSA" data-region="Africa" onclick="navToBank('SBSA')" style="cursor:pointer" title="View SBSA loans">
+            <td><strong>SBSA</strong><br/><span style="font-size:11px;color:var(--text3)">Standard Bank SA</span></td>
+            <td><span class="badge badge-blue">Africa</span></td>
+            <td class="td-mono">$122.0M</td><td class="td-mono">$107.3M</td>
+            <td class="td-mono" style="color:var(--amber)">$14.7M</td>
+            <td class="td-mono">SOFR+5.00%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill amber" style="width:88%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">88%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="JTI" data-region="Other" onclick="navToBank('JTI')" style="cursor:pointer" title="View JTI loans">
+            <td><strong>JTI</strong><br/><span style="font-size:11px;color:var(--text3)">JT International</span></td>
+            <td><span class="badge badge-gray">Other</span></td>
+            <td class="td-mono">$40.0M</td><td class="td-mono">$39.1M</td>
+            <td class="td-mono" style="color:var(--red)">$0.9M</td>
+            <td class="td-mono">Fixed 7.50%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill red" style="width:98%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">98%</span></div></td>
+            <td><span class="badge badge-amber">Near limit</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="AFREXIM" data-region="Africa" onclick="navToBank('AFREXIM')" style="cursor:pointer" title="View AFREXIM loans">
+            <td><strong>AFREXIM</strong><br/><span style="font-size:11px;color:var(--text3)">African Export-Import</span></td>
+            <td><span class="badge badge-blue">Africa</span></td>
+            <td class="td-mono">$40.0M</td><td class="td-mono">$37.7M</td>
+            <td class="td-mono" style="color:var(--red)">$2.3M</td>
+            <td class="td-mono">SOFR+4.75%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill red" style="width:95%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">95%</span></div></td>
+            <td><span class="badge badge-amber">Near limit</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="TDB" data-region="Africa" onclick="navToBank('TDB')" style="cursor:pointer" title="View TDB loans">
+            <td><strong>TDB</strong><br/><span style="font-size:11px;color:var(--text3)">Trade & Dev. Bank</span></td>
+            <td><span class="badge badge-blue">Africa</span></td>
+            <td class="td-mono">$65.0M</td><td class="td-mono">$48.9M</td>
+            <td class="td-mono" style="color:var(--accent)">$16.1M</td>
+            <td class="td-mono">SOFR+5.50%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:75%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">75%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="BIC-BRED" data-region="Europe" onclick="navToBank('BIC-BRED')" style="cursor:pointer" title="View BIC-BRED loans">
+            <td><strong>BIC-BRED</strong><br/><span style="font-size:11px;color:var(--text3)">Banque Commerce, Geneva</span></td>
+            <td><span class="badge badge-gray">Europe</span></td>
+            <td class="td-mono">$25.0M</td><td class="td-mono">$16.0M</td>
+            <td class="td-mono" style="color:var(--accent)">$9.0M</td>
+            <td class="td-mono">COF+4.00%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:64%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">64%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="BCGE" data-region="Europe" onclick="navToBank('BCGE')" style="cursor:pointer" title="View BCGE loans">
+            <td><strong>BCGE</strong><br/><span style="font-size:11px;color:var(--text3)">Banque Cantonale Genève</span></td>
+            <td><span class="badge badge-gray">Europe</span></td>
+            <td class="td-mono">$50.0M</td><td class="td-mono">$33.2M</td>
+            <td class="td-mono" style="color:var(--accent)">$16.8M</td>
+            <td class="td-mono">SOFR+4.50%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:66%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">66%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="CEB" data-region="Europe" onclick="navToBank('CEB')" style="cursor:pointer" title="View CEB loans">
+            <td><strong>CEB</strong><br/><span style="font-size:11px;color:var(--text3)">Credit Europe Bank</span></td>
+            <td><span class="badge badge-gray">Europe</span></td>
+            <td class="td-mono">$30.0M</td><td class="td-mono">$26.8M</td>
+            <td class="td-mono" style="color:var(--accent)">$3.2M</td>
+            <td class="td-mono">SOFR+4.25%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill amber" style="width:89%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">89%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="ZENITH" data-region="Other" onclick="navToBank('ZENITH')" style="cursor:pointer" title="View ZENITH loans">
+            <td><strong>ZENITH</strong></td>
+            <td><span class="badge badge-gray">Other</span></td>
+            <td class="td-mono">$18.0M</td><td class="td-mono">$14.2M</td>
+            <td class="td-mono" style="color:var(--accent)">$3.8M</td>
+            <td class="td-mono">SOFR+4.80%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill amber" style="width:79%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">79%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="BOC" data-region="Asia" onclick="navToBank('BOC')" style="cursor:pointer" title="View BOC loans">
+            <td><strong>BOC</strong><br/><span style="font-size:11px;color:var(--text3)">Bank of China</span></td>
+            <td><span class="badge badge-blue">Asia</span></td>
+            <td class="td-mono">$22.0M</td><td class="td-mono">$19.7M</td>
+            <td class="td-mono" style="color:var(--accent)">$2.3M</td>
+            <td class="td-mono">SOFR+4.50%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill amber" style="width:89%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">89%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="INVESTEC" data-region="Africa" onclick="navToBank('INVESTEC')" style="cursor:pointer" title="View INVESTEC loans">
+            <td><strong>INVESTEC</strong></td>
+            <td><span class="badge badge-blue">Africa</span></td>
+            <td class="td-mono">$43.0M</td><td class="td-mono">$20.0M</td>
+            <td class="td-mono" style="color:var(--accent)">$23.0M</td>
+            <td class="td-mono">SOFR+4.60%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:47%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">47%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="ABSA" data-region="Africa" onclick="navToBank('ABSA')" style="cursor:pointer" title="View ABSA loans">
+            <td><strong>ABSA</strong></td>
+            <td><span class="badge badge-blue">Africa</span></td>
+            <td class="td-mono">$8.0M</td><td class="td-mono">$1.6M</td>
+            <td class="td-mono" style="color:var(--accent)">$6.4M</td>
+            <td class="td-mono">SOFR+4.40%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:20%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">20%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+          <tr class="bank-row" data-bank="CITIBANK" data-region="Other" onclick="navToBank('CITIBANK')" style="cursor:pointer" title="View CITIBANK loans">
+            <td><strong>CITIBANK</strong></td>
+            <td><span class="badge badge-gray">Other</span></td>
+            <td class="td-mono">$15.0M</td><td class="td-mono">$9.2M</td>
+            <td class="td-mono" style="color:var(--accent)">$5.8M</td>
+            <td class="td-mono">SOFR+4.20%</td>
+            <td><div style="display:flex;align-items:center;gap:8px"><div class="prog-wrap"><div class="prog-fill green" style="width:61%"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace">61%</span></div></td>
+            <td><span class="badge badge-green">Active</span></td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- LOANS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-loans">
+  <div class="page-header">
+    <div>
+      <div class="page-title" id="loans-page-title">Loan Register</div>
+      <div class="page-sub" id="loans-page-sub">All active drawdowns · interest auto-calculated daily</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn btn-ghost btn-sm" id="loans-back-btn" onclick="navToBank('All')" style="display:none">← All banks</button>
+      <button class="btn btn-primary btn-sm" onclick="openModal('modal-loan')">+ New drawdown</button>
+    </div>
+  </div>
+  <div class="section">
+    <div class="search-bar">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="loan-search" oninput="filterLoans()" placeholder="Search by reference, cost centre…" style="padding-left:32px"/>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;width:fit-content" id="loan-bank-tabs">
+      <div class="tab active" onclick="setLoanBank('All',this)">All banks</div>
+      <div class="tab" onclick="setLoanBank('TDB',this)">TDB</div>
+      <div class="tab" onclick="setLoanBank('BIC-BRED',this)">BIC-BRED</div>
+      <div class="tab" onclick="setLoanBank('SBSA',this)">SBSA</div>
+      <div class="tab" onclick="setLoanBank('JTI',this)">JTI</div>
+      <div class="tab" onclick="setLoanBank('AFREXIM',this)">AFREXIM</div>
+      <div class="tab" onclick="setLoanBank('BCGE',this)">BCGE</div>
+      <div class="tab" onclick="setLoanBank('CEB',this)">CEB</div>
+      <div class="tab" onclick="setLoanBank('BOC',this)">BOC</div>
+      <div class="tab" onclick="setLoanBank('INVESTEC',this)">INVESTEC</div>
+      <div class="tab" onclick="setLoanBank('ZENITH',this)">ZENITH</div>
+      <div class="tab" onclick="setLoanBank('ABSA',this)">ABSA</div>
+      <div class="tab" onclick="setLoanBank('CITIBANK',this)">CITIBANK</div>
+    </div>
+    <div id="loan-bank-strip" style="display:none;background:var(--accent);color:#fff;border-radius:var(--radius);padding:14px 20px;margin-bottom:16px;grid-template-columns:repeat(4,1fr);gap:0">
+      <div class="strip-item"><div class="strip-label">Outstanding</div><div class="strip-val" id="bstrip-bal">—</div></div>
+      <div class="strip-item"><div class="strip-label">Facility limit</div><div class="strip-val" id="bstrip-limit">—</div></div>
+      <div class="strip-item"><div class="strip-label">Rate</div><div class="strip-val" id="bstrip-rate">—</div></div>
+      <div class="strip-item"><div class="strip-label">Active loans</div><div class="strip-val" id="bstrip-count">—</div></div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <span class="table-title" id="loans-table-title">All loans</span>
+        <span id="loans-count-badge" class="badge badge-gray" style="font-family:'DM Mono',monospace"></span>
+      </div>
+      <div style="overflow-x:auto"><table style="min-width:1050px">
+        <thead><tr>
+          <th>Reference</th><th>Bank</th><th>Stage / Type</th><th>Cost Centre</th><th>Principal (USD)</th><th>Rate p.a.</th><th>Interest (Apr)</th><th>Due Date</th><th>Status</th><th style="min-width:60px">Action</th>
+        </tr></thead>
+        <tbody id="loans-tbody"></tbody>
+      </table></div>
+      <div id="loans-empty" style="display:none;text-align:center;padding:32px;color:var(--text3)">
+        <div style="font-size:28px;margin-bottom:8px">◇</div>
+        <div id="loans-empty-msg">No loans found for this bank</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- COLLATERAL -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-collateral">
+  <div class="page-header">
+    <div><div class="page-title">Warehouse &amp; Collateral Monitor</div><div class="page-sub">WHRs · in-transit · receivables · facility coverage · live security position</div></div>
+    <button class="btn btn-primary btn-sm" onclick="openModal('modal-whr')">+ Add WHR</button>
+  </div>
+  <div class="section">
+
+    <!-- METRICS -->
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Total WHR Value</div>
+        <div class="metric-value green">$29.4M</div>
+        <div class="metric-sub"><span class="dot green"></span> 5 active receipts</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Lendable @85%</div>
+        <div class="metric-value">$25.0M</div>
+        <div class="metric-sub"><span class="dot"></span> After 15% haircut</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Receivables Assigned</div>
+        <div class="metric-value amber">$10.2M</div>
+        <div class="metric-sub"><span class="dot amber"></span> TDB $1.74M · BIC $8.45M</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Coverage Breaches</div>
+        <div class="metric-value red">1</div>
+        <div class="metric-sub"><span class="dot red"></span> TDB ZIM Green — $3.14M short</div>
+      </div>
+    </div>
+
+    <!-- BREACH ALERT -->
+    <div class="alert alert-red"><span class="alert-icon">⚠</span><div><strong>TDB Zimbabwe Stage 2 (WHR: ZIM/TDB/PREM/26/G/001) — Coverage breach:</strong> Collateral $4,720,003 × 85% = $4,012,003 lendable. Loan balance $7,149,368. Shortfall: <strong>$3,137,365</strong>. Breach absorbed at facility level by processed stock, but individual WHR must be topped up or loan partially repaid.</div></div>
+
+    <!-- LIFECYCLE EXPLAINER -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:20px;box-shadow:var(--shadow)">
+      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">Security lifecycle — how collateral form changes with tobacco state</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative">
+        <div style="background:var(--blue-light);border:1px solid #C5D8EE;border-radius:8px 0 0 8px;padding:12px 14px;border-right:none">
+          <div style="font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">① Warehouse</div>
+          <div style="font-size:12.5px;font-weight:600;color:var(--text)">WHR issued</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px">Keeper confirms stock. Bank holds WHR document. Advance rate: <strong>85%</strong></div>
+        </div>
+        <div style="background:#FFF3E0;border:1px solid #F0D090;padding:12px 14px;border-left:none;border-right:none;position:relative">
+          <div style="font-size:10px;font-weight:700;color:#B25000;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">② Processing</div>
+          <div style="font-size:12.5px;font-weight:600;color:var(--text)">Trust receipt</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px">Goods at factory. Trust receipt replaces WHR temporarily. Same 85%</div>
+        </div>
+        <div style="background:#FFF8E1;border:1px solid #E8D060;padding:12px 14px;border-left:none;border-right:none">
+          <div style="font-size:10px;font-weight:700;color:var(--amber);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">③ Processed</div>
+          <div style="font-size:12.5px;font-weight:600;color:var(--text)">New WHR issued</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px">Packed &amp; graded. New WHR at higher value (processed premium). Advance: <strong>85%</strong></div>
+        </div>
+        <div style="background:#F3F0FF;border:1px solid #C8C0E8;padding:12px 14px;border-left:none;border-right:none">
+          <div style="font-size:10px;font-weight:700;color:#5040A0;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">④ In-Transit</div>
+          <div style="font-size:12.5px;font-weight:600;color:var(--text)">Bill of lading</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px">Goods shipped. Bank holds B/L as security. Advance: <strong>85%</strong></div>
+        </div>
+        <div style="background:var(--accent-light);border:1px solid #A8D4BC;border-radius:0 8px 8px 0;padding:12px 14px;border-left:none">
+          <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">⑤ Sold</div>
+          <div style="font-size:12.5px;font-weight:600;color:var(--text)">Receivable assigned</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px">Invoice issued. Buyer owes PTID. Invoice assigned to bank. Advance: <strong>85%</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div style="display:flex;gap:2px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;width:fit-content;margin-bottom:16px" id="coll-tabs">
+      <div class="tab active" onclick="showCollTab('whr',this)">WHR — Warehouse</div>
+      <div class="tab" onclick="showCollTab('transit',this)">In-Transit</div>
+      <div class="tab" onclick="showCollTab('recv',this)">Receivables</div>
+      <div class="tab" onclick="showCollTab('position',this)">Facility Position</div>
+    </div>
+
+    <!-- ── WHR TAB ── -->
+    <div id="ctab-whr">
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title">Active warehouse receipts</span>
+          <span class="badge badge-gray" style="font-family:'DM Mono',monospace">5 active · 0 released</span>
+        </div>
+        <div style="overflow-x:auto">
+        <table style="min-width:1100px">
+          <thead><tr>
+            <th>WHR Reference</th><th>Bank</th><th>Location</th><th>Origin</th><th>Type</th><th>Volume (kg)</th><th>Value USD</th><th>Lendable @85%</th><th>Linked Loan</th><th>Coverage</th><th>Status</th><th style="min-width:70px">Action</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="td-mono" style="font-size:12px;font-weight:700;color:var(--accent)">PTID-WR-0001</span></td>
+              <td><strong>TDB</strong><br/><span style="font-size:10px;color:var(--text3)">Trade &amp; Dev. Bank</span></td>
+              <td>Harare<br/><span style="font-size:10px;color:var(--text3)">Reload</span></td>
+              <td><span class="badge badge-gray">2-ZIM</span></td>
+              <td><span class="badge badge-green">Processed</span></td>
+              <td class="td-mono">1,692,200</td>
+              <td class="td-mono">$10,317,104</td>
+              <td class="td-mono" style="color:var(--accent)">$8,769,538</td>
+              <td><span class="td-mono" style="font-size:12px;font-weight:700;color:var(--accent)">PTID-WR-0001</span></td>
+              <td><div style="display:flex;align-items:center;gap:6px"><div class="prog-wrap" style="width:70px"><div class="prog-fill green" style="width:78%"></div></div><span style="font-size:11px">78%</span></div></td>
+              <td><span class="badge badge-green">Compliant</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openWHRDetail(0)">View</button></td>
+            </tr>
+            <tr style="background:var(--red-light)">
+              <td><span class="td-mono" style="font-size:12px;font-weight:700;color:var(--red)">PTID-WR-0002</span></td>
+              <td><strong>TDB</strong><br/><span style="font-size:10px;color:var(--text3)">Trade &amp; Dev. Bank</span></td>
+              <td>Harare<br/><span style="font-size:10px;color:var(--text3)">Reload</span></td>
+              <td><span class="badge badge-gray">2-ZIM</span></td>
+              <td><span class="badge badge-amber">Green</span></td>
+              <td class="td-mono">1,242,106</td>
+              <td class="td-mono">$4,720,003</td>
+              <td class="td-mono" style="color:var(--red)">$4,012,003</td>
+              <td><span class="td-mono" style="font-size:12px;font-weight:700;color:var(--red)">PTID-WR-0002</span></td>
+              <td><div style="display:flex;align-items:center;gap:6px"><div class="prog-wrap" style="width:70px"><div class="prog-fill red" style="width:56%"></div></div><span style="font-size:11px;color:var(--red)">56%</span></div></td>
+              <td><span class="badge badge-red">⚠ Breach</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openWHRDetail(1)">View</button></td>
+            </tr>
+            <tr>
+              <td><span class="td-mono" style="font-size:12px;font-weight:700;color:var(--accent)">PTID-WR-0003</span></td>
+              <td><strong>TDB</strong><br/><span style="font-size:10px;color:var(--text3)">Trade &amp; Dev. Bank</span></td>
+              <td>RSA<br/><span style="font-size:10px;color:var(--text3)">Reload RSA</span></td>
+              <td><span class="badge badge-gray">2-ZIM</span></td>
+              <td><span class="badge badge-green">Processed</span></td>
+              <td class="td-mono">762,800</td>
+              <td class="td-mono">$5,410,448</td>
+              <td class="td-mono" style="color:var(--accent)">$4,598,881</td>
+              <td class="td-mono" style="font-size:11px">TDB/RSA/PREM/25/P/108</td>
+              <td><div style="display:flex;align-items:center;gap:6px"><div class="prog-wrap" style="width:70px"><div class="prog-fill green" style="width:85%"></div></div><span style="font-size:11px">85%</span></div></td>
+              <td><span class="badge badge-green">Compliant</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openWHRDetail(2)">View</button></td>
+            </tr>
+            <tr>
+              <td><span class="td-mono" style="font-size:12px;font-weight:700;color:var(--accent)">PTID-WR-0004</span></td>
+              <td><strong>BIC-BRED</strong><br/><span style="font-size:10px;color:var(--text3)">Banque Commerce</span></td>
+              <td>Brazil<br/><span style="font-size:10px;color:var(--text3)">CUW / Matriz</span></td>
+              <td><span class="badge badge-gray">1-BRA</span></td>
+              <td><span class="badge badge-green">Processed</span></td>
+              <td class="td-mono">850,000</td>
+              <td class="td-mono">$7,301,000</td>
+              <td class="td-mono" style="color:var(--accent)">$6,205,850</td>
+              <td class="td-mono" style="font-size:11px">BIC/BRA/L2/SL3.2/042</td>
+              <td><div style="display:flex;align-items:center;gap:6px"><div class="prog-wrap" style="width:70px"><div class="prog-fill green" style="width:71%"></div></div><span style="font-size:11px">71%</span></div></td>
+              <td><span class="badge badge-green">Compliant</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openWHRDetail(3)">View</button></td>
+            </tr>
+            <tr>
+              <td><span class="td-mono" style="font-size:12px;font-weight:700;color:var(--accent)">PTID-WR-0005</span></td>
+              <td><strong>BIC-BRED</strong><br/><span style="font-size:10px;color:var(--text3)">Banque Commerce</span></td>
+              <td>RSA<br/><span style="font-size:10px;color:var(--text3)">Reload RSA</span></td>
+              <td><span class="badge badge-gray">2-ZIM</span></td>
+              <td><span class="badge badge-green">Processed</span></td>
+              <td class="td-mono">244,600</td>
+              <td class="td-mono">$1,653,890</td>
+              <td class="td-mono" style="color:var(--accent)">$1,405,807</td>
+              <td class="td-mono" style="font-size:11px">BIC/ZIM/L2/SL3.1/018</td>
+              <td><div style="display:flex;align-items:center;gap:6px"><div class="prog-wrap" style="width:70px"><div class="prog-fill green" style="width:100%"></div></div><span style="font-size:11px">100%+</span></div></td>
+              <td><span class="badge badge-green">Compliant</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openWHRDetail(4)">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── IN-TRANSIT TAB ── -->
+    <div id="ctab-transit" style="display:none">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:14px;font-size:12.5px;color:var(--text2)">
+        <strong style="color:var(--text)">What is in-transit?</strong> Tobacco that has left the warehouse and is physically moving — on a truck to a port, loaded onto a vessel, or between bonded warehouses. The bank holds the <strong>Bill of Lading (B/L)</strong> as security instead of the WHR. Once delivered and invoiced, it converts to a receivable.
+      </div>
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title">In-transit stock — TDB (as at 17 Apr 2026)</span>
+          <span class="badge badge-gray">$319,830 total · @85% = $271,856</span>
+        </div>
+        <table>
+          <thead><tr><th>Bank</th><th>PTSI Ref</th><th>Customer</th><th>Invoice</th><th>Value USD</th><th>Lendable @85%</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr style="opacity:.5">
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI19772</td>
+              <td>JTI</td>
+              <td class="td-mono">TBA</td>
+              <td class="td-mono">—</td>
+              <td class="td-mono">—</td>
+              <td><span class="badge badge-gray">Repaid 13.04.26</span></td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI18916 E</td>
+              <td>Unga Unga</td>
+              <td class="td-mono">TBA (B/L held)</td>
+              <td class="td-mono">$106,080</td>
+              <td class="td-mono" style="color:var(--accent)">$90,168</td>
+              <td><span class="badge badge-blue">In transit</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openTransitDetail(0)">View</button></td>
+            </tr>
+            <tr>
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI18917 E</td>
+              <td>Unga Unga</td>
+              <td class="td-mono">TBA (B/L held)</td>
+              <td class="td-mono">$108,000</td>
+              <td class="td-mono" style="color:var(--accent)">$91,800</td>
+              <td><span class="badge badge-blue">In transit</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openTransitDetail(1)">View</button></td>
+            </tr>
+            <tr>
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI18918 F</td>
+              <td>Unga Unga</td>
+              <td class="td-mono">TBA (B/L held)</td>
+              <td class="td-mono">$105,750</td>
+              <td class="td-mono" style="color:var(--accent)">$89,888</td>
+              <td><span class="badge badge-blue">In transit</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openTransitDetail(2)">View</button></td>
+            </tr>
+            <tr style="background:var(--surface2);font-weight:600">
+              <td colspan="4" style="text-align:right;font-size:12px">TOTAL ACTIVE</td>
+              <td class="td-mono">$319,830</td>
+              <td class="td-mono" style="color:var(--accent)">$271,856</td>
+              <td colspan="2"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── RECEIVABLES TAB ── -->
+    <div id="ctab-recv" style="display:none">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:14px;font-size:12.5px;color:var(--text2)">
+        <strong style="color:var(--text)">What are receivables?</strong> Once PTID ships tobacco and issues a sales invoice to the buyer, the unpaid invoice amount is assigned to the bank as security. The bank lends <strong>85%</strong> of the invoice value (TDB) or <strong>90%</strong> (BIC-BRED historically). When the buyer pays, the receivable is released and the loan is repaid.
+      </div>
+
+      <!-- TDB Receivables -->
+      <div class="table-wrap" style="margin-bottom:14px">
+        <div class="table-header">
+          <span class="table-title">TDB — Assigned receivables (17 Apr 2026)</span>
+          <span class="badge badge-gray" style="font-family:'DM Mono',monospace">$1,735,736 · @85% = $1,475,376</span>
+        </div>
+        <table>
+          <thead><tr><th>Bank</th><th>PTSI Ref</th><th>Invoice</th><th>Customer</th><th>Invoice USD</th><th>Lendable @85%</th><th>Due Date</th><th>Docs</th><th></th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI19187</td>
+              <td class="td-mono">PTD-0000994</td>
+              <td>Saigon Tobacco Co.</td>
+              <td class="td-mono">$831,600</td>
+              <td class="td-mono" style="color:var(--accent)">$706,860</td>
+              <td class="td-mono">Pending</td>
+              <td><span class="badge badge-amber">Pending</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(0)">View</button></td>
+            </tr>
+            <tr>
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI18912 C</td>
+              <td class="td-mono">PTD-0001194</td>
+              <td>Unga Unga</td>
+              <td class="td-mono">$127,300</td>
+              <td class="td-mono" style="color:var(--accent)">$108,205</td>
+              <td class="td-mono">Pending</td>
+              <td><span class="badge badge-amber">Pending</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(1)">View</button></td>
+            </tr>
+            <tr>
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI18915 C</td>
+              <td class="td-mono">PTD-0001193</td>
+              <td>Unga Unga</td>
+              <td class="td-mono">$158,400</td>
+              <td class="td-mono" style="color:var(--accent)">$134,640</td>
+              <td class="td-mono">Pending</td>
+              <td><span class="badge badge-amber">Pending</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(2)">View</button></td>
+            </tr>
+            <tr>
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI19371</td>
+              <td class="td-mono">PTD-0000931</td>
+              <td>Continental</td>
+              <td class="td-mono">$110,286</td>
+              <td class="td-mono" style="color:var(--accent)">$93,743</td>
+              <td class="td-mono">Pending</td>
+              <td><span class="badge badge-amber">Pending</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(3)">View</button></td>
+            </tr>
+            <tr>
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI18915 D</td>
+              <td class="td-mono">PTD-0001289</td>
+              <td>Unga Unga</td>
+              <td class="td-mono">$158,400</td>
+              <td class="td-mono" style="color:var(--accent)">$134,640</td>
+              <td class="td-mono">Pending</td>
+              <td><span class="badge badge-amber">Pending</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(4)">View</button></td>
+            </tr>
+            <tr>
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI18916 F</td>
+              <td class="td-mono">PTD-0001359</td>
+              <td>Unga Unga</td>
+              <td class="td-mono">$136,000</td>
+              <td class="td-mono" style="color:var(--accent)">$115,600</td>
+              <td class="td-mono">Pending</td>
+              <td><span class="badge badge-amber">Pending</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(5)">View</button></td>
+            </tr>
+            <tr>
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI18917 D</td>
+              <td class="td-mono">PTD-0001360</td>
+              <td>Unga Unga</td>
+              <td class="td-mono">$108,000</td>
+              <td class="td-mono" style="color:var(--accent)">$91,800</td>
+              <td class="td-mono">Pending</td>
+              <td><span class="badge badge-amber">Pending</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(6)">View</button></td>
+            </tr>
+            <tr>
+              <td><strong>TDB</strong></td>
+              <td class="td-mono">PTSI18918 E</td>
+              <td class="td-mono">PTD-0001361</td>
+              <td>Unga Unga</td>
+              <td class="td-mono">$105,750</td>
+              <td class="td-mono" style="color:var(--accent)">$89,888</td>
+              <td class="td-mono">Pending</td>
+              <td><span class="badge badge-amber">Pending</span></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(7)">View</button></td>
+            </tr>
+            <tr style="background:var(--surface2);font-weight:600">
+              <td colspan="4" style="text-align:right;font-size:12px">TDB TOTAL</td>
+              <td class="td-mono">$1,735,736</td>
+              <td class="td-mono" style="color:var(--accent)">$1,475,376</td>
+              <td colspan="2"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- BIC-BRED Receivables pool -->
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title">BIC-BRED — Receivables pool (not yet drawn)</span>
+          <span class="badge badge-gray" style="font-family:'DM Mono',monospace">$8,454,280 available · $20M facility · $0 drawn</span>
+        </div>
+        <table>
+          <thead><tr><th>Bank</th><th>Origin</th><th>Pool Value USD</th><th>Advance Rate</th><th>Lendable</th><th>Facility Limit</th><th>Drawn</th><th>Headroom</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>BIC-BRED</strong></td>
+              <td><span class="badge badge-gray">2-ZIM</span></td>
+              <td class="td-mono">$1,368,280</td>
+              <td class="td-mono">90%</td>
+              <td class="td-mono" style="color:var(--accent)">$1,231,452</td>
+              <td class="td-mono">$20,000,000</td>
+              <td class="td-mono" style="color:var(--text3)">$0</td>
+              <td class="td-mono" style="color:var(--accent)">$20,000,000</td>
+            </tr>
+            <tr>
+              <td><strong>BIC-BRED</strong></td>
+              <td><span class="badge badge-gray">1-BRA</span></td>
+              <td class="td-mono">$7,086,000</td>
+              <td class="td-mono">90%</td>
+              <td class="td-mono" style="color:var(--accent)">$6,377,400</td>
+              <td class="td-mono">—</td>
+              <td class="td-mono" style="color:var(--text3)">$0</td>
+              <td class="td-mono" style="color:var(--accent)">—</td>
+            </tr>
+            <tr style="background:var(--surface2);font-weight:600">
+              <td colspan="2" style="text-align:right;font-size:12px">BIC TOTAL POOL</td>
+              <td class="td-mono">$8,454,280</td>
+              <td class="td-mono">90%</td>
+              <td class="td-mono" style="color:var(--accent)">$7,608,852</td>
+              <td colspan="3"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── FACILITY POSITION TAB ── -->
+    <div id="ctab-position" style="display:none">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:14px;font-size:12.5px;color:var(--text2)">
+        <strong style="color:var(--text)">How the bank checks you are within limits.</strong> The bank adds up all three security types (WHR stock + receivables + in-transit), each multiplied by 85%, plus any clean/pre-crop unsecured balance. If the total exceeds the loan outstanding, you have a surplus. If below, it is a breach and you must add collateral or repay.
+      </div>
+
+      <!-- TDB Position -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)">
+          <div style="font-size:13px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center">
+            <span>TDB — Facility position (17 Apr 2026)</span>
+            <span class="badge badge-green">+$275K surplus</span>
+          </div>
+          <div style="font-size:12.5px">
+            <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text2)">Total loans outstanding</span><span class="td-mono" style="font-weight:600">$48,852,304</span></div>
+            <div style="padding:10px 0 6px;color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px">Secured by (×0.85)</div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0 5px 12px;border-bottom:1px dashed var(--border)"><span style="color:var(--text2)">WHR Stock — ZIM Processed</span><span class="td-mono" style="color:var(--accent)">$8,769,538</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0 5px 12px;border-bottom:1px dashed var(--border)"><span style="color:var(--text2)">WHR Stock — ZIM Green</span><span class="td-mono" style="color:var(--red)">$4,012,003</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0 5px 12px;border-bottom:1px dashed var(--border)"><span style="color:var(--text2)">WHR Stock — RSA Processed</span><span class="td-mono" style="color:var(--accent)">$4,598,881</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0 5px 12px;border-bottom:1px dashed var(--border)"><span style="color:var(--text2)">Receivables (8 invoices)</span><span class="td-mono" style="color:var(--accent)">$1,475,376</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0 5px 12px"><span style="color:var(--text2)">In-Transit stock</span><span class="td-mono" style="color:var(--accent)">$271,856</span></div>
+            <div style="display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)"><span style="color:var(--text2)">Total secured capacity</span><span class="td-mono" style="font-weight:600">$19,127,654</span></div>
+            <div style="padding:10px 0 6px;color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px">Clean / Unsecured</div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0 5px 12px"><span style="color:var(--text2)">Pre-crop (Stage 1, clean)</span><span class="td-mono">$30,000,000</span></div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:2px solid var(--border);margin-top:6px"><span style="font-weight:600">Total coverage</span><span class="td-mono" style="font-weight:600">$49,127,654</span></div>
+            <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--accent-light);border-radius:6px;margin-top:4px"><span style="font-weight:600;color:var(--accent)">Surplus / (Deficit)</span><span class="td-mono" style="font-weight:700;color:var(--accent)">+$275,350 ✓</span></div>
+          </div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)">
+          <div style="font-size:13px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center">
+            <span>BIC-BRED — Facility position (17 Apr 2026)</span>
+            <span class="badge badge-green">Compliant</span>
+          </div>
+          <div style="font-size:12.5px">
+            <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text2)">Total loans outstanding</span><span class="td-mono" style="font-weight:600">$15,997,904</span></div>
+            <div style="padding:10px 0 6px;color:var(--text3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px">Secured by (×0.85)</div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0 5px 12px;border-bottom:1px dashed var(--border)"><span style="color:var(--text2)">Brazil WHRs (3 receipts)</span><span class="td-mono" style="color:var(--accent)">$6,205,850</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0 5px 12px;border-bottom:1px dashed var(--border)"><span style="color:var(--text2)">RSA WHR</span><span class="td-mono" style="color:var(--accent)">$1,405,807</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0 5px 12px;border-bottom:1px dashed var(--border)"><span style="color:var(--text2)">Zimbabwe WHR</span><span class="td-mono" style="color:var(--accent)">$475,942</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0 5px 12px;border-bottom:1px dashed var(--border)"><span style="color:var(--text2)">Tanzania WHR</span><span class="td-mono" style="color:var(--accent)">$5,710,616</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0 5px 12px"><span style="color:var(--text2)">Receivables pool (undrawn)</span><span class="td-mono" style="color:var(--text3)">$0 drawn</span></div>
+            <div style="display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)"><span style="color:var(--text2)">Total secured capacity</span><span class="td-mono" style="font-weight:600">$13,798,215</span></div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:2px solid var(--border);margin-top:6px"><span style="font-weight:600">Total coverage</span><span class="td-mono" style="font-weight:600">$13,798,215</span></div>
+            <div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--accent-light);border-radius:6px;margin-top:4px"><span style="font-weight:600;color:var(--accent)">Surplus / (Deficit)</span><span class="td-mono" style="font-weight:700;color:var(--amber)">−$2,199,689 (Tanzania covers)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary bar -->
+      <div style="background:var(--accent);color:#fff;border-radius:var(--radius);padding:14px 20px;display:grid;grid-template-columns:repeat(4,1fr);gap:0">
+        <div class="strip-item"><div class="strip-label">Total WHR Security</div><div class="strip-val">$17.4M</div><div class="strip-sub">after 85% haircut</div></div>
+        <div class="strip-item"><div class="strip-label">Total Receivables</div><div class="strip-val">$1.5M</div><div class="strip-sub">TDB assigned</div></div>
+        <div class="strip-item"><div class="strip-label">Total In-Transit</div><div class="strip-val">$272K</div><div class="strip-sub">3 active shipments</div></div>
+        <div class="strip-item"><div class="strip-label">Grand Total Security</div><div class="strip-val">$19.1M</div><div class="strip-sub">+ $30M clean = $49.1M</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- WHR DETAIL MODAL -->
+<div class="modal-backdrop" id="modal-whr-detail">
+  <div class="modal" style="width:640px">
+    <div class="modal-title" id="whr-detail-title">WHR Detail <span class="modal-close" onclick="closeModal('modal-whr-detail')">×</span></div>
+    <div id="whr-detail-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm">Update value</button>
+      <button class="btn btn-ghost btn-sm">Release WHR</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-whr-detail')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- MOVEMENT LOG -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page" id="page-movement">
+  <div class="page-header">
+    <div><div class="page-title">Movement Log</div><div class="page-sub">All drawdowns, repayments, interest payments · FY26</div></div>
+    <button class="btn btn-primary btn-sm" onclick="openModal('modal-movement')">+ Record movement</button>
+  </div>
+  <div class="section">
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Apr Drawdowns</div>
+        <div class="metric-value green">$113.7M</div>
+        <div class="metric-sub">+22 new loans</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Apr Repayments</div>
+        <div class="metric-value amber">$110.4M</div>
+        <div class="metric-sub">Principal returned</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Apr Interest Paid</div>
+        <div class="metric-value">$1.73M</div>
+        <div class="metric-sub">Cash out this month</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Net Movement</div>
+        <div class="metric-value green">+$3.3M</div>
+        <div class="metric-sub">Portfolio grew</div>
+      </div>
+    </div>
+
+    <div class="movement-grid">
+      <div class="movement-card">
+        <div class="movement-card-title">Recent drawdowns</div>
+        <div class="movement-item">
+          <div class="movement-dot" style="background:var(--accent)"></div>
+          <div class="movement-info"><div class="movement-name">TDB · Pre-Crop Zimbabwe</div><div class="movement-meta">16 Apr 2026 · 2-ZIM · Stage 1</div></div>
+          <div class="movement-amount" style="color:var(--accent)">+$13,500,000</div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-dot" style="background:var(--accent)"></div>
+          <div class="movement-info"><div class="movement-name">BIC-BRED · Brazil Sub-limit 3.2</div><div class="movement-meta">14 Apr 2026 · 1-BRA · L2</div></div>
+          <div class="movement-amount" style="color:var(--accent)">+$8,721,654</div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-dot" style="background:var(--accent)"></div>
+          <div class="movement-info"><div class="movement-name">SBSA · Zimbabwe $20M facility</div><div class="movement-meta">12 Apr 2026 · 2-ZIM · Revolving</div></div>
+          <div class="movement-amount" style="color:var(--accent)">+$20,000,000</div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-dot" style="background:var(--accent)"></div>
+          <div class="movement-info"><div class="movement-name">AFREXIM · Zimbabwe</div><div class="movement-meta">10 Apr 2026 · 2-ZIM</div></div>
+          <div class="movement-amount" style="color:var(--accent)">+$23,515,000</div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-dot" style="background:var(--accent)"></div>
+          <div class="movement-info"><div class="movement-name">DPW · Mixed origins</div><div class="movement-meta">08 Apr 2026 · 5-COR</div></div>
+          <div class="movement-amount" style="color:var(--accent)">+$11,145,981</div>
+        </div>
+      </div>
+
+      <div class="movement-card">
+        <div class="movement-card-title">Recent repayments</div>
+        <div class="movement-item">
+          <div class="movement-dot" style="background:var(--red)"></div>
+          <div class="movement-info"><div class="movement-name">TDB · Malawi Stage 2</div><div class="movement-meta">17 Apr 2026 · 2-MAL · Principal</div></div>
+          <div class="movement-amount" style="color:var(--red)">−$3,088,057</div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-dot" style="background:var(--red)"></div>
+          <div class="movement-info"><div class="movement-name">BIC-BRED · Tanzania</div><div class="movement-meta">15 Apr 2026 · 2-TAN · Principal</div></div>
+          <div class="movement-amount" style="color:var(--red)">−$5,409,217</div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-dot" style="background:var(--red)"></div>
+          <div class="movement-info"><div class="movement-name">SBSA · Brazil Discount</div><div class="movement-meta">13 Apr 2026 · 1-BRA · Principal</div></div>
+          <div class="movement-amount" style="color:var(--red)">−$39,632,183</div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-dot" style="background:var(--amber)"></div>
+          <div class="movement-info"><div class="movement-name">BIC-BRED · Interest payment</div><div class="movement-meta">10 Apr 2026 · Interest cash</div></div>
+          <div class="movement-amount" style="color:var(--amber)">−$267,588</div>
+        </div>
+        <div class="movement-item">
+          <div class="movement-dot" style="background:var(--amber)"></div>
+          <div class="movement-info"><div class="movement-name">TDB · Interest settlement</div><div class="movement-meta">08 Apr 2026 · Interest cash</div></div>
+          <div class="movement-amount" style="color:var(--amber)">−$39,037</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONTHLY TABLE -->
+    <div class="table-wrap" style="margin-top:14px">
+      <div class="table-header"><span class="table-title">Monthly movements — FY26</span></div>
+      <table>
+        <thead><tr>
+          <th>Month</th><th>Opening Balance</th><th>Drawdowns</th><th>Repayments</th><th>Closing Balance</th><th>Int. Accrued</th><th>Int. Paid</th><th>Rate p.a.</th>
+        </tr></thead>
+        <tbody>
+          <tr style="background:var(--accent-light)">
+            <td><strong>April</strong></td>
+            <td class="td-mono">$461.4M</td>
+            <td class="td-mono" style="color:var(--accent)">+$113.7M</td>
+            <td class="td-mono" style="color:var(--red)">−$110.4M</td>
+            <td class="td-mono"><strong>$464.7M</strong></td>
+            <td class="td-mono">$4.54M</td>
+            <td class="td-mono">$1.73M</td>
+            <td class="td-mono">8.70%</td>
+          </tr>
+          <tr><td>May</td><td class="td-mono">$464.7M</td><td class="td-mono" style="color:var(--accent)">+$107.6M</td><td class="td-mono" style="color:var(--red)">−$116.4M</td><td class="td-mono">$455.9M</td><td class="td-mono">$3.51M</td><td class="td-mono">$2.33M</td><td class="td-mono">9.03%</td></tr>
+          <tr><td>June</td><td class="td-mono">$455.9M</td><td class="td-mono" style="color:var(--accent)">+$110.0M</td><td class="td-mono" style="color:var(--red)">−$122.8M</td><td class="td-mono">$443.1M</td><td class="td-mono">$3.44M</td><td class="td-mono">$3.75M</td><td class="td-mono">9.12%</td></tr>
+          <tr><td>July</td><td class="td-mono">$443.1M</td><td class="td-mono" style="color:var(--accent)">+$98.6M</td><td class="td-mono" style="color:var(--red)">−$87.0M</td><td class="td-mono">$454.7M</td><td class="td-mono">$4.43M</td><td class="td-mono">$2.18M</td><td class="td-mono">9.19%</td></tr>
+          <tr><td>August</td><td class="td-mono">$454.7M</td><td class="td-mono" style="color:var(--accent)">+$60.0M</td><td class="td-mono" style="color:var(--red)">−$77.1M</td><td class="td-mono">$437.5M</td><td class="td-mono">$3.59M</td><td class="td-mono">$2.59M</td><td class="td-mono">9.22%</td></tr>
+          <tr><td colspan="8" style="text-align:center;color:var(--text3);font-size:12px">September → March (7 more months) · Cumulative YTD interest: $41.9M accrued / $39.0M paid</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- INTEREST PAGE (stub) -->
+<div class="page" id="page-interest">
+  <div class="page-header"><div><div class="page-title">Interest Accrual</div><div class="page-sub">Daily calculation · accrued vs paid · GL reconciliation</div></div></div>
+  <div class="section">
+    <div class="alert alert-amber"><span class="alert-icon">ℹ</span><div>Interest is calculated automatically: <strong>Principal × Rate × (Days in period ÷ 365)</strong>. All rates are updated from the Rate Table (SOFR / COF). Any rate change retroactively recalculates open loan interest.</div></div>
+    <div class="table-wrap"><div class="table-header"><span class="table-title">Per-bank interest summary — April 2026</span></div>
+    <table><thead><tr><th>Bank</th><th>Principal</th><th>Rate</th><th>Days</th><th>Accrued</th><th>Paid</th><th>Unpaid (accrual)</th><th>GL Account</th></tr></thead>
+    <tbody>
+      <tr><td><strong>SBSA</strong></td><td class="td-mono">$107.3M</td><td class="td-mono">10.35%</td><td>30</td><td class="td-mono">$916,548</td><td class="td-mono">$501,505</td><td class="td-mono" style="color:var(--amber)">$415,043</td><td class="td-mono">7902000</td></tr>
+      <tr><td><strong>JTI</strong></td><td class="td-mono">$39.1M</td><td class="td-mono">7.50%</td><td>30</td><td class="td-mono">$245,475</td><td class="td-mono">$0</td><td class="td-mono" style="color:var(--amber)">$245,475</td><td class="td-mono">7902000</td></tr>
+      <tr><td><strong>TDB</strong></td><td class="td-mono">$48.9M</td><td class="td-mono">10.85%</td><td>30</td><td class="td-mono">$438,694</td><td class="td-mono">$39,037</td><td class="td-mono" style="color:var(--amber)">$399,657</td><td class="td-mono">7902000</td></tr>
+      <tr><td><strong>BIC-BRED</strong></td><td class="td-mono">$16.0M</td><td class="td-mono">7.25%</td><td>30</td><td class="td-mono">$96,658</td><td class="td-mono">$267,588</td><td class="td-mono" style="color:var(--accent)">$0 ✓</td><td class="td-mono">7902000</td></tr>
+      <tr><td><strong>AFREXIM</strong></td><td class="td-mono">$37.7M</td><td class="td-mono">10.10%</td><td>30</td><td class="td-mono">$314,603</td><td class="td-mono">$168,379</td><td class="td-mono" style="color:var(--amber)">$146,224</td><td class="td-mono">7902000</td></tr>
+      <tr><td colspan="8" style="text-align:center;color:var(--text3);font-size:12px">+ 16 more banks · Total April accrual: $4.54M · Total paid: $1.73M · Unposted to BC: $2.88M</td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+<!-- ALLOCATION PAGE (stub) -->
+<div class="page" id="page-allocation">
+  <div class="page-header"><div><div class="page-title">Cost Allocation</div><div class="page-sub">Finance costs by country cost centre · FY26</div></div></div>
+  <div class="section">
+    <div class="table-wrap"><div class="table-header"><span class="table-title">Interest cost by cost centre — YTD FY26</span></div>
+    <table><thead><tr><th>Cost Centre</th><th>Country</th><th>Interest YTD</th><th>Upfront Fees</th><th>Corp Guarantee</th><th>Total Finance Cost</th><th>% of Portfolio</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-gray">1-BRA</span></td><td>Brazil</td><td class="td-mono">$8.74M</td><td class="td-mono">$175K</td><td class="td-mono">$3.50M</td><td class="td-mono"><strong>$12.41M</strong></td><td class="td-mono">29.6%</td></tr>
+      <tr><td><span class="badge badge-gray">2-ZIM</span></td><td>Zimbabwe</td><td class="td-mono">$16.00M</td><td class="td-mono">$478K</td><td class="td-mono">$6.38M</td><td class="td-mono"><strong>$22.86M</strong></td><td class="td-mono">54.6%</td></tr>
+      <tr><td><span class="badge badge-gray">2-MAL</span></td><td>Malawi</td><td class="td-mono">$2.10M</td><td class="td-mono">$62K</td><td class="td-mono">$0.84M</td><td class="td-mono"><strong>$3.00M</strong></td><td class="td-mono">7.2%</td></tr>
+      <tr><td><span class="badge badge-gray">2-TAN</span></td><td>Tanzania</td><td class="td-mono">$1.20M</td><td class="td-mono">$35K</td><td class="td-mono">$0.48M</td><td class="td-mono"><strong>$1.71M</strong></td><td class="td-mono">4.1%</td></tr>
+      <tr><td><span class="badge badge-gray">4-ARG</span></td><td>Argentina</td><td class="td-mono">$0.36M</td><td class="td-mono">$12K</td><td class="td-mono">$0.07M</td><td class="td-mono"><strong>$0.44M</strong></td><td class="td-mono">1.0%</td></tr>
+      <tr><td><span class="badge badge-gray">5-COR</span></td><td>Corporate</td><td class="td-mono">$1.40M</td><td class="td-mono">$80K</td><td class="td-mono">−$11.27M</td><td class="td-mono"><strong>−$9.79M</strong></td><td class="td-mono">—</td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- MODALS -->
+<!-- ══════════════════════════════════════════ -->
+
+<!-- NEW BANK MODAL -->
+<div class="modal-backdrop" id="modal-bank">
+  <div class="modal">
+    <div class="modal-title">Add new bank <span class="modal-close" onclick="closeModal('modal-bank')">×</span></div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Bank name</label><input type="text" placeholder="e.g. Stanbic Zimbabwe"/></div>
+      <div class="form-group"><label>Region</label><select><option>Africa</option><option>Europe</option><option>Asia</option><option>Other</option></select></div>
+      <div class="form-group"><label>Facility limit (USD)</label><input type="number" placeholder="50000000"/></div>
+      <div class="form-group"><label>Rate type</label><select><option>SOFR + margin</option><option>COF + margin</option><option>Fixed rate</option></select></div>
+      <div class="form-group"><label>Margin (%)</label><input type="number" placeholder="4.50" step="0.01"/></div>
+      <div class="form-group"><label>Facility start date</label><input type="date"/></div>
+      <div class="form-group"><label>Facility expiry date</label><input type="date"/></div>
+      <div class="form-group"><label>Primary cost centre</label><select><option>1-BRA</option><option>2-ZIM</option><option>2-MAL</option><option>2-TAN</option><option>2-UGA</option><option>5-COR</option></select></div>
+      <div class="form-group full"><label>Notes / sub-limits</label><textarea rows="2" placeholder="e.g. Sub-limit A: $20M Zimbabwe processed; Sub-limit B: $30M Brazil"></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-bank')">Cancel</button><button class="btn btn-primary">Save bank</button></div>
+  </div>
+</div>
+
+<!-- NEW LOAN MODAL -->
+<div class="modal-backdrop" id="modal-loan">
+  <div class="modal">
+    <div class="modal-title">Record new drawdown <span class="modal-close" onclick="closeModal('modal-loan')">×</span></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Bank</label><select><option>TDB</option><option>BIC-BRED</option><option>SBSA</option><option>AFREXIM</option><option>BCGE</option><option>JTI</option><option>CEB</option><option>BOC</option></select></div>
+      <div class="form-group"><label>Facility / Sub-limit</label><input type="text" placeholder="e.g. Stage 2 · Green Zimbabwe"/></div>
+      <div class="form-group"><label>Reference number</label><input type="text" placeholder="e.g. ZIM/TDB/PREM/26/G/002"/></div>
+      <div class="form-group"><label>Cost centre</label><select><option>1-BRA</option><option>2-ZIM</option><option>2-MAL</option><option>2-TAN</option><option>2-UGA</option><option>4-ARG</option><option>5-COR</option></select></div>
+      <div class="form-group"><label>Drawdown amount (USD)</label><input type="number" placeholder="5000000"/></div>
+      <div class="form-group"><label>Drawdown date</label><input type="date"/></div>
+      <div class="form-group"><label>Due date</label><input type="date"/></div>
+      <div class="form-group"><label>Interest rate p.a. (%)</label><input type="number" placeholder="10.85" step="0.01"/></div>
+      <div class="form-group"><label>Tobacco stage</label><select><option>Pre-Crop (Stage 1)</option><option>Green (Stage 2)</option><option>Trust Receipt (Stage 3)</option><option>Processed (Stage 4)</option><option>In-Transit (Stage 5)</option><option>Receivables (Stage 6)</option><option>Revolving / Other</option></select></div>
+      <div class="form-group"><label>Linked WHR reference</label><input type="text" placeholder="Leave blank if none"/></div>
+      <div class="form-group full"><label>Remarks</label><input type="text" placeholder="e.g. New 2026 crop Zimbabwe green leaf"/></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-loan')">Cancel</button><button class="btn btn-primary">Save drawdown</button></div>
+  </div>
+</div>
+
+<!-- LOAN DETAIL MODAL -->
+<div class="modal-backdrop" id="modal-loan-detail">
+  <div class="modal">
+    <div class="modal-title" id="loan-detail-title">Loan detail <span class="modal-close" onclick="closeModal('modal-loan-detail')">×</span></div>
+    <div id="loan-detail-body">
+    <div class="modal-footer" style="justify-content:space-between">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm">Record repayment</button>
+        <button class="btn btn-ghost btn-sm">Update WHR</button>
+      </div>
+      <button class="btn btn-ghost" onclick="closeModal('modal-loan-detail')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW WHR MODAL -->
+<div class="modal-backdrop" id="modal-whr">
+  <div class="modal">
+    <div class="modal-title">Add warehouse receipt (WHR) <span class="modal-close" onclick="closeModal('modal-whr')">×</span></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Bank / facility</label><select><option>TDB</option><option>BIC-BRED</option></select></div>
+      <div class="form-group"><label>WHR reference</label><input type="text" placeholder="e.g. ZIM/TDB/PREM/26/G/002"/></div>
+      <div class="form-group"><label>Location</label><select><option>Zimbabwe (Harare)</option><option>RSA</option><option>Brazil</option><option>Malawi</option><option>Tanzania</option><option>Antwerp</option><option>UAE (RAK)</option><option>Mozambique</option></select></div>
+      <div class="form-group"><label>Type</label><select><option>Green (unprocessed)</option><option>Processed</option><option>In-transit</option></select></div>
+      <div class="form-group"><label>Volume (kg)</label><input type="number" placeholder="500000"/></div>
+      <div class="form-group"><label>Value (USD)</label><input type="number" placeholder="2000000"/></div>
+      <div class="form-group"><label>WHR keeper / warehouse</label><input type="text" placeholder="e.g. Reload Harare / BS Malawi"/></div>
+      <div class="form-group"><label>Crop year</label><input type="number" placeholder="2026"/></div>
+      <div class="form-group"><label>Cost centre (origin)</label><select><option>2-ZIM</option><option>1-BRA</option><option>2-MAL</option><option>2-TAN</option><option>2-UGA</option></select></div>
+      <div class="form-group"><label>Advance rate (%)</label><input type="number" value="85" step="1"/></div>
+      <div class="form-group full"><label>Linked loan reference</label><input type="text" placeholder="Loan this WHR backs"/></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-whr')">Cancel</button><button class="btn btn-primary">Save WHR</button></div>
+  </div>
+</div>
+
+<!-- NEW MOVEMENT MODAL -->
+<div class="modal-backdrop" id="modal-movement">
+  <div class="modal">
+    <div class="modal-title">Record movement <span class="modal-close" onclick="closeModal('modal-movement')">×</span></div>
+    <div class="form-grid">
+      <div class="form-group"><label>Movement type</label><select><option>Drawdown (new loan)</option><option>Principal repayment</option><option>Interest payment</option><option>Fee payment</option></select></div>
+      <div class="form-group"><label>Date</label><input type="date"/></div>
+      <div class="form-group"><label>Bank</label><select><option>TDB</option><option>BIC-BRED</option><option>SBSA</option><option>AFREXIM</option><option>BCGE</option><option>JTI</option><option>CEB</option></select></div>
+      <div class="form-group"><label>Linked loan / reference</label><input type="text" placeholder="Loan reference"/></div>
+      <div class="form-group"><label>Amount (USD)</label><input type="number" placeholder="1000000"/></div>
+      <div class="form-group"><label>Cost centre</label><select><option>1-BRA</option><option>2-ZIM</option><option>2-MAL</option><option>2-TAN</option><option>5-COR</option></select></div>
+      <div class="form-group full"><label>GL account</label><select><option>7902000 — Interest on bank loans</option><option>7901000 — Finance charges</option><option>7904000 — Facility legal fees</option><option>7905000 — Facility upfront fees</option><option>7908000 — Tradex drawdown fee</option></select></div>
+      <div class="form-group full"><label>Bank reference / document no.</label><input type="text" placeholder="e.g. SBSA89712-00000332"/></div>
+      <div class="form-group full"><label>Notes</label><input type="text" placeholder="Optional remarks"/></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-movement')">Cancel</button><button class="btn btn-primary">Save movement</button></div>
+  </div>
+</div>
+
+<script>
+// ── LOAN DATA ──────────────────────────────────────────────────────────
+const ALL_LOANS = [
+  {id:'PTID-LR-0001', ref:'ZIM/TDB/PRE/26/001',       bank:'TDB',      bankFull:'Trade & Development Bank',              type:'Stage 1 · Pre-crop',    cc:'2-ZIM', principal:30000000, rate:'10.85%', interest:'$270,750',  due:'30 Jun 2026', drawnOn:'01 Nov 2025', whr:'PTID-WR-0003', status:'outstanding', facility:'Pre-Crop Zimbabwe', sublimit:'ZIM Clean $30M',    note:'Clean pre-crop facility. No collateral required. Full $30M drawn to finance 2026 Zimbabwe crop.'},
+  {id:'PTID-LR-0002', ref:'ZIM/TDB/PREM/26/G/001',    bank:'TDB',      bankFull:'Trade & Development Bank',              type:'Stage 2 · Green',       cc:'2-ZIM', principal:7149368,  rate:'10.85%', interest:'$64,592',   due:'15 May 2026', drawnOn:'16 Mar 2026', whr:'PTID-WR-0002', status:'due-soon',    facility:'Green Leaf Zimbabwe', sublimit:'ZIM Green $65M', note:'⚠ Collateral breach. WHR value $4.72M × 85% = $4.01M lendable vs $7.15M loan. Top-up required.'},
+  {id:'PTID-LR-0003', ref:'ZIM/TDB/PREM/23&25/P/290', bank:'TDB',      bankFull:'Trade & Development Bank',              type:'Stage 4 · Processed',   cc:'2-ZIM', principal:11254493, rate:'10.85%', interest:'$101,673',  due:'31 May 2026', drawnOn:'20 Feb 2026', whr:'PTID-WR-0001', status:'outstanding', facility:'Processed Zimbabwe', sublimit:'ZIM Processed $65M', note:'Backed by 1,692,200 kg processed Zimbabwe tobacco at Reload Harare. Coverage 78% — compliant.'},
+  {id:'PTID-LR-0004', ref:'TDB/MAL/PRE/26/002',       bank:'TDB',      bankFull:'Trade & Development Bank',              type:'Stage 1 · Pre-crop',    cc:'2-MAL', principal:3500000,  rate:'10.85%', interest:'$31,625',   due:'30 Jun 2026', drawnOn:'15 Nov 2025', whr:'—',            status:'outstanding', facility:'Pre-Crop Malawi',  sublimit:'MAL Clean $10M',    note:'Clean pre-crop facility for Malawi 2026 crop financing. No collateral required.'},
+  {id:'PTID-LR-0005', ref:'MW/TDB/PREM/25/P/10',      bank:'TDB',      bankFull:'Trade & Development Bank',              type:'Stage 4 · Processed',   cc:'2-MAL', principal:448443,   rate:'10.85%', interest:'$4,051',    due:'15 Jun 2026', drawnOn:'10 Jan 2026', whr:'—',            status:'outstanding', facility:'Processed Malawi',  sublimit:'MAL Processed $35M', note:'Small residual balance on 2025 Malawi processed tobacco facility.'},
+  {id:'PTID-LR-0006', ref:'BIC/BRA/L2/SL3.2/042',    bank:'BIC-BRED', bankFull:'Banque Internationale de Commerce — BRED', type:'L2 · Brazil',         cc:'1-BRA', principal:8719600,  rate:'7.25%',  interest:'$52,736',   due:'10 Jun 2026', drawnOn:'14 Apr 2026', whr:'PTID-WR-0004', status:'outstanding', facility:'L2 Brazil Sub-limit 3.2', sublimit:'Brazil $10M', note:'Backed by WHR PTID-WR-0004 — 850,000 kg Brazil processed tobacco at CUW/Matriz. Coverage 71%.'},
+  {id:'PTID-LR-0007', ref:'BIC/TAN/L2/SL3.2/021',    bank:'BIC-BRED', bankFull:'Banque Internationale de Commerce — BRED', type:'L2 · Tanzania',       cc:'2-TAN', principal:6718372,  rate:'7.25%',  interest:'$40,598',   due:'22 May 2026', drawnOn:'28 Mar 2026', whr:'—',            status:'due-soon',    facility:'L2 Tanzania Sub-limit', sublimit:'Tanzania $10M', note:'Tanzania processed tobacco facility. Due soon — repayment from Tanzania receivables expected.'},
+  {id:'PTID-LR-0008', ref:'BIC/ZIM/L2/SL3.1/018',    bank:'BIC-BRED', bankFull:'Banque Internationale de Commerce — BRED', type:'L2 · Zimbabwe',       cc:'2-ZIM', principal:559932,   rate:'9.25%',  interest:'$4,323',    due:'30 Jun 2026', drawnOn:'05 Feb 2026', whr:'PTID-WR-0005', status:'outstanding', facility:'L2 Zimbabwe Sub-limit 3.1', sublimit:'Zimbabwe $12.5M', note:'Small drawdown backed by WHR PTID-WR-0005 — RSA processed tobacco. Significant surplus coverage.'},
+  {id:'PTID-LR-0009', ref:'SBSA/ZIM/20M/FY26/018',   bank:'SBSA',     bankFull:'Standard Bank South Africa',            type:'Revolving',             cc:'2-ZIM', principal:20000000, rate:'10.35%', interest:'$172,500',  due:'30 Apr 2026', drawnOn:'12 Apr 2026', whr:'—',            status:'overdue',     facility:'Zimbabwe $20M Revolving', sublimit:'ZIM $20M', note:'⚠ OVERDUE — due 30 Apr 2026. Renewal or repayment required immediately. Revolving credit facility.'},
+  {id:'PTID-LR-0010', ref:'SBSA/ZIM/DISC/FY26/031',  bank:'SBSA',     bankFull:'Standard Bank South Africa',            type:'Discount facility',     cc:'2-ZIM', principal:45000000, rate:'10.35%', interest:'$388,125',  due:'15 Jun 2026', drawnOn:'01 Apr 2026', whr:'—',            status:'outstanding', facility:'Zimbabwe Discount',       sublimit:'ZIM Disc $45M', note:'Largest SBSA drawdown. Discount facility against Zimbabwe tobacco sales pipeline.'},
+  {id:'PTID-LR-0011', ref:'SBSA/BRA/FY26/009',       bank:'SBSA',     bankFull:'Standard Bank South Africa',            type:'Term loan',             cc:'1-BRA', principal:28000000, rate:'10.35%', interest:'$241,500',  due:'31 Jul 2026', drawnOn:'15 Mar 2026', whr:'—',            status:'outstanding', facility:'Brazil Term Loan',        sublimit:'Brazil $28M', note:'Brazil crop financing. Clean term loan — no physical collateral, backed by sales contracts.'},
+  {id:'PTID-LR-0012', ref:'SBSA/MAL/FY26/005',       bank:'SBSA',     bankFull:'Standard Bank South Africa',            type:'Term loan',             cc:'2-MAL', principal:14259836, rate:'10.35%', interest:'$122,991',  due:'30 May 2026', drawnOn:'20 Feb 2026', whr:'—',            status:'due-soon',    facility:'Malawi Term Loan',        sublimit:'MAL $14M', note:'Malawi term loan due soon. Repayment expected from Malawi tobacco receivables.'},
+  {id:'PTID-LR-0013', ref:'JTI/ZIM/FX/FY26/004',     bank:'JTI',      bankFull:'JT International',                      type:'Fixed rate',            cc:'2-ZIM', principal:39107152, rate:'7.50%',  interest:'$244,420',  due:'31 Mar 2027', drawnOn:'01 Apr 2025', whr:'—',            status:'outstanding', facility:'Zimbabwe Fixed Rate',     sublimit:'ZIM $40M', note:'Long-term JTI buyer finance facility. Fixed 7.50% rate. Matures Mar 2027. Clean — no collateral.'},
+  {id:'PTID-LR-0014', ref:'AFREXIM/ZIM/FY26/012',    bank:'AFREXIM',  bankFull:'African Export-Import Bank',            type:'Structured',            cc:'2-ZIM', principal:23515000, rate:'10.10%', interest:'$197,826',  due:'30 Sep 2026', drawnOn:'10 Apr 2026', whr:'—',            status:'outstanding', facility:'Zimbabwe Structured',     sublimit:'ZIM $40M', note:'AFREXIM structured trade finance. Clean facility backed by Zimbabwe export contracts.'},
+  {id:'PTID-LR-0015', ref:'AFREXIM/MAL/FY26/003',    bank:'AFREXIM',  bankFull:'African Export-Import Bank',            type:'Structured',            cc:'2-MAL', principal:14175000, rate:'10.10%', interest:'$119,225',  due:'30 Aug 2026', drawnOn:'05 Mar 2026', whr:'—',            status:'outstanding', facility:'Malawi Structured',       sublimit:'MAL $15M', note:'AFREXIM Malawi crop finance. Structured facility against Malawi tobacco export pipeline.'},
+  {id:'PTID-LR-0016', ref:'BCGE/BRA/FY26/011',       bank:'BCGE',     bankFull:'Banque Cantonale de Genève',            type:'Term loan',             cc:'1-BRA', principal:12239067, rate:'9.85%',  interest:'$100,464',  due:'15 Jul 2026', drawnOn:'01 Mar 2026', whr:'—',            status:'outstanding', facility:'Brazil Term Loan',        sublimit:'BRA $20M', note:'BCGE Brazil term loan. Clean facility. Repayment from Brazil tobacco sales receipts.'},
+  {id:'PTID-LR-0017', ref:'BCGE/ZIM/FY26/007',       bank:'BCGE',     bankFull:'Banque Cantonale de Genève',            type:'Term loan',             cc:'2-ZIM', principal:20911939, rate:'9.85%',  interest:'$171,480',  due:'31 Aug 2026', drawnOn:'10 Feb 2026', whr:'—',            status:'outstanding', facility:'Zimbabwe Term Loan',      sublimit:'ZIM $30M', note:'BCGE Zimbabwe term loan. Largest BCGE drawdown. Clean facility against ZIM export contracts.'},
+  {id:'PTID-LR-0018', ref:'CEB/ZIM/FY26/006',        bank:'CEB',      bankFull:'Credit Europe Bank',                    type:'Term loan',             cc:'2-ZIM', principal:26774300, rate:'9.60%',  interest:'$213,828',  due:'30 Sep 2026', drawnOn:'15 Jan 2026', whr:'—',            status:'outstanding', facility:'Zimbabwe Term Loan',      sublimit:'ZIM $30M', note:'CEB Zimbabwe facility. Largest single CEB drawdown at 89% utilisation. Repayment Sep 2026.'},
+  {id:'PTID-LR-0019', ref:'BOC/BRA/FY26/008',        bank:'BOC',      bankFull:'Bank of China',                         type:'Trade finance',         cc:'1-BRA', principal:19721465, rate:'8.95%',  interest:'$147,105',  due:'30 Jun 2026', drawnOn:'20 Feb 2026', whr:'—',            status:'outstanding', facility:'Brazil Trade Finance',    sublimit:'BRA $22M', note:'Bank of China Brazil trade finance facility. Against Brazilian tobacco export documentation.'},
+  {id:'PTID-LR-0020', ref:'INVESTEC/ZIM/FY26/010',   bank:'INVESTEC', bankFull:'Investec Bank',                         type:'Term loan',             cc:'2-ZIM', principal:20000000, rate:'9.95%',  interest:'$165,833',  due:'31 Jul 2026', drawnOn:'01 Mar 2026', whr:'—',            status:'outstanding', facility:'Zimbabwe Term Loan',      sublimit:'ZIM $20M', note:'Investec Zimbabwe term loan. Clean facility. Moderate utilisation 47% of $43M limit.'},
+  {id:'PTID-LR-0021', ref:'ZENITH/ZIM/FY26/014',     bank:'ZENITH',   bankFull:'Zenith Bank',                           type:'Revolving',             cc:'2-ZIM', principal:14195090, rate:'10.15%', interest:'$120,034',  due:'30 Jun 2026', drawnOn:'25 Mar 2026', whr:'—',            status:'outstanding', facility:'Zimbabwe Revolving',      sublimit:'ZIM $18M', note:'Zenith Zimbabwe revolving credit facility. 79% drawn. Repayment from ongoing ZIM tobacco sales.'},
+  {id:'PTID-LR-0022', ref:'ABSA/BRA/FY26/002',       bank:'ABSA',     bankFull:'ABSA Bank',                             type:'Term loan',             cc:'1-BRA', principal:1600200,  rate:'9.75%',  interest:'$13,002',   due:'31 May 2026', drawnOn:'15 Jan 2026', whr:'—',            status:'due-soon',    facility:'Brazil Term Loan',        sublimit:'BRA $8M', note:'ABSA Brazil small balance. Due soon — repayment expected from Brazil tobacco receivables.'},
+  {id:'PTID-LR-0023', ref:'CITIBANK/ZIM/FY26/016',   bank:'CITIBANK', bankFull:'Citibank N.A.',                         type:'Trade finance',         cc:'2-ZIM', principal:9207938,  rate:'9.60%',  interest:'$73,543',   due:'30 Jun 2026', drawnOn:'10 Mar 2026', whr:'—',            status:'outstanding', facility:'Zimbabwe Trade Finance',  sublimit:'ZIM $15M', note:'Citibank Zimbabwe trade finance. Clean facility at 61% utilisation. Against ZIM export docs.'},
+];
+
+// Bank meta info for the summary strip
+const BANK_META = {
+  'TDB':      {bal:'$48.9M', limit:'$65.0M', rate:'SOFR+5.50%'},
+  'BIC-BRED': {bal:'$16.0M', limit:'$25.0M', rate:'COF+4.00%'},
+  'SBSA':     {bal:'$107.3M',limit:'$122.0M',rate:'SOFR+5.00%'},
+  'JTI':      {bal:'$39.1M', limit:'$40.0M', rate:'Fixed 7.50%'},
+  'AFREXIM':  {bal:'$37.7M', limit:'$40.0M', rate:'SOFR+4.75%'},
+  'BCGE':     {bal:'$33.2M', limit:'$50.0M', rate:'SOFR+4.50%'},
+  'CEB':      {bal:'$26.8M', limit:'$30.0M', rate:'SOFR+4.25%'},
+  'BOC':      {bal:'$19.7M', limit:'$22.0M', rate:'SOFR+4.50%'},
+  'INVESTEC': {bal:'$20.0M', limit:'$43.0M', rate:'SOFR+4.60%'},
+  'ZENITH':   {bal:'$14.2M', limit:'$18.0M', rate:'SOFR+4.80%'},
+  'ABSA':     {bal:'$1.6M',  limit:'$8.0M',  rate:'SOFR+4.40%'},
+  'CITIBANK': {bal:'$9.2M',  limit:'$15.0M', rate:'SOFR+4.20%'},
+};
+
+let currentLoanBank = 'All';
+let currentLoanSearch = '';
+
+// ── BADGE HELPERS ──────────────────────────────────────────────────────
+function stageBadge(type) {
+  const t = type.toLowerCase();
+  if (t.includes('stage 1') || t.includes('pre-crop')) return 'badge-blue';
+  if (t.includes('stage 2') || t.includes('green'))   return 'badge-amber';
+  if (t.includes('stage 4') || t.includes('processed')) return 'badge-green';
+  if (t.includes('stage 5') || t.includes('transit')) return 'badge-gray';
+  if (t.includes('stage 6') || t.includes('receiv'))  return 'badge-blue';
+  return 'badge-gray';
+}
+function statusBadge(s) {
+  if (s === 'overdue')    return '<span class="badge badge-red">Overdue</span>';
+  if (s === 'due-soon')   return '<span class="badge badge-amber">Due soon</span>';
+  return '<span class="badge badge-green">Outstanding</span>';
+}
+function fmtPrincipal(n) {
+  return '$' + n.toLocaleString();
+}
+
+// ── RENDER LOANS TABLE ─────────────────────────────────────────────────
+function renderLoans() {
+  const tbody = document.getElementById('loans-tbody');
+  const empty = document.getElementById('loans-empty');
+  const countBadge = document.getElementById('loans-count-badge');
+  const tableTitle = document.getElementById('loans-table-title');
+
+  const search = currentLoanSearch.toLowerCase();
+  const filtered = ALL_LOANS.filter(l => {
+    const bankMatch = currentLoanBank === 'All' || l.bank === currentLoanBank;
+    const searchMatch = !search ||
+      l.ref.toLowerCase().includes(search) ||
+      l.bank.toLowerCase().includes(search) ||
+      l.cc.toLowerCase().includes(search) ||
+      l.type.toLowerCase().includes(search);
+    return bankMatch && searchMatch;
+  });
+
+  tableTitle.textContent = currentLoanBank === 'All' ? 'All loans' : currentLoanBank + ' loans';
+  countBadge.textContent = filtered.length + ' loan' + (filtered.length !== 1 ? 's' : '');
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    document.getElementById('loans-empty-msg').textContent =
+      currentLoanBank !== 'All' ? 'No loans found for ' + currentLoanBank : 'No loans match your search';
+    return;
+  }
+
+  empty.style.display = 'none';
+  tbody.innerHTML = filtered.map((l,i) => {
+    const globalIdx = ALL_LOANS.indexOf(l);
+    return `
+    <tr>
+      <td>
+        <span class="td-mono" style="font-size:12px;font-weight:600;color:var(--accent)">${l.id}</span>
+      </td>
+      <td><strong>${l.bank}</strong><br/><span style="font-size:10px;color:var(--text3)">${l.bankFull}</span></td>
+      <td><span class="badge ${stageBadge(l.type)}">${l.type}</span></td>
+      <td><span class="badge badge-gray">${l.cc}</span></td>
+      <td class="td-mono"><strong>${fmtPrincipal(l.principal)}</strong></td>
+      <td class="td-mono">${l.rate}</td>
+      <td class="td-mono" style="color:var(--accent)">${l.interest}</td>
+      <td class="td-mono" style="font-size:11.5px">${l.due}</td>
+      <td>${statusBadge(l.status)}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="openLoanDetail(${globalIdx})">View</button></td>
+    </tr>
+  `}).join('');
+}
+
+// ── SET BANK FILTER ────────────────────────────────────────────────────
+function setLoanBank(bank, clickedTab) {
+  currentLoanBank = bank;
+
+  // Update tabs
+  document.querySelectorAll('#loan-bank-tabs .tab').forEach(t => t.classList.remove('active'));
+  if (clickedTab) clickedTab.classList.add('active');
+
+  // Bank summary strip
+  const strip = document.getElementById('loan-bank-strip');
+  const backBtn = document.getElementById('loans-back-btn');
+  if (bank !== 'All' && BANK_META[bank]) {
+    const meta = BANK_META[bank];
+    const count = ALL_LOANS.filter(l => l.bank === bank).length;
+    document.getElementById('bstrip-bal').textContent = meta.bal;
+    document.getElementById('bstrip-limit').textContent = meta.limit;
+    document.getElementById('bstrip-rate').textContent = meta.rate;
+    document.getElementById('bstrip-count').textContent = count;
+    strip.style.display = 'grid';
+    backBtn.style.display = 'inline-flex';
+    document.getElementById('loans-page-title').textContent = bank + ' — Loans';
+    document.getElementById('loans-page-sub').textContent = 'Filtered by bank · ' + count + ' active loan' + (count !== 1 ? 's' : '');
+  } else {
+    strip.style.display = 'none';
+    backBtn.style.display = 'none';
+    document.getElementById('loans-page-title').textContent = 'Loan Register';
+    document.getElementById('loans-page-sub').textContent = 'All active drawdowns · interest auto-calculated daily';
+  }
+
+  renderLoans();
+}
+
+// ── SEARCH ─────────────────────────────────────────────────────────────
+function filterLoans() {
+  currentLoanSearch = document.getElementById('loan-search').value;
+  renderLoans();
+}
+
+// ── NAVIGATE FROM BANK ROW → LOANS FILTERED ───────────────────────────
+function navToBank(bank) {
+  nav('loans');
+  // Small delay so page is visible before we switch the tab
+  setTimeout(() => {
+    if (bank === 'All') {
+      const allTab = document.querySelector('#loan-bank-tabs .tab');
+      setLoanBank('All', allTab);
+    } else {
+      const tabs = document.querySelectorAll('#loan-bank-tabs .tab');
+      let target = null;
+      tabs.forEach(t => {
+        if (t.textContent.trim() === bank) target = t;
+      });
+      setLoanBank(bank, target);
+    }
+  }, 50);
+}
+
+// ── BANK REGION FILTER (Banks page) ───────────────────────────────────
+function filterBankRegion(region, clickedTab) {
+  document.querySelectorAll('#bank-region-tabs .tab').forEach(t => t.classList.remove('active'));
+  clickedTab.classList.add('active');
+  document.querySelectorAll('.bank-row').forEach(row => {
+    const r = row.getAttribute('data-region');
+    row.style.display = (region === 'All' || r === region) ? '' : 'none';
+  });
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────
+function nav(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + page + "'")) {
+      n.classList.add('active');
+    }
+  });
+  document.querySelector('.main').scrollTo(0, 0);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-backdrop').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ── LOAN DETAIL MODAL ────────────────────────────────────────────────
+function openLoanDetail(idx) {
+  const l = ALL_LOANS[idx];
+  const isOverdue  = l.status === 'overdue';
+  const isDueSoon  = l.status === 'due-soon';
+  const bannerBg   = isOverdue ? 'var(--red-light)' : isDueSoon ? 'var(--amber-light)' : 'var(--accent-light)';
+  const bannerBdr  = isOverdue ? '#F5B0A8' : isDueSoon ? '#F0D070' : '#A8D4BC';
+  const bannerClr  = isOverdue ? 'var(--red)' : isDueSoon ? 'var(--amber)' : 'var(--accent)';
+  const statusIcon = isOverdue ? '⚠ OVERDUE' : isDueSoon ? '⚠ Due soon' : '✓ Outstanding';
+
+  document.getElementById('loan-detail-title').innerHTML =
+    `${l.id} — ${l.bank} <span class="modal-close" onclick="closeModal('modal-loan-detail')">×</span>`;
+
+  document.getElementById('loan-detail-body').innerHTML = `
+    <div style="padding:10px 14px;border-radius:8px;margin-bottom:16px;background:${bannerBg};border:1px solid ${bannerBdr}">
+      <div style="font-size:12px;font-weight:600;color:${bannerClr}">${statusIcon} — ${l.type} · ${l.facility}</div>
+      <div style="font-size:11.5px;margin-top:2px;color:${bannerClr}">${l.note}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Principal</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700">${fmtPrincipal(l.principal)}</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Rate p.a.</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700">${l.rate}</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Interest (Apr)</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--accent)">${l.interest}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:12.5px">
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);grid-column:1/-1"><div style="color:var(--text3);font-size:11px">PTID Loan ID</div><div style="font-family:'DM Mono',monospace;font-weight:700;color:var(--accent);font-size:15px">${l.id}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Bank</div><div style="font-weight:600">${l.bankFull}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Facility / Sub-limit</div><div>${l.facility} · ${l.sublimit}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Loan type</div><div><span class="badge ${stageBadge(l.type)}">${l.type}</span></div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Cost centre</div><div><span class="badge badge-gray">${l.cc}</span></div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Drawn on</div><div style="font-family:'DM Mono',monospace">${l.drawnOn}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Due date</div><div style="font-family:'DM Mono',monospace;color:${isOverdue ? 'var(--red)' : isDueSoon ? 'var(--amber)' : 'var(--text)'};font-weight:${isOverdue||isDueSoon?'600':'400'}">${l.due}${isOverdue?' ⚠':isDueSoon?' ↑':''}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Linked WHR</div><div style="font-family:'DM Mono',monospace;color:${l.whr!=='—'?'var(--accent)':'var(--text3)'}">${l.whr}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Status</div><div>${statusBadge(l.status)}</div></div>
+      <div style="padding:8px 12px;grid-column:1/-1;border-top:0"><div style="color:var(--text3);font-size:11px;margin-bottom:3px">Notes</div><div style="font-size:12px;color:var(--text2)">${l.note}</div></div>
+    </div>
+  `;
+  openModal('modal-loan-detail');
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────
+renderLoans();
+
+// ── COLLATERAL TABS ────────────────────────────────────────────────────
+function showCollTab(tab, clickedEl) {
+  ['whr','transit','recv','position'].forEach(t => {
+    const el = document.getElementById('ctab-' + t);
+    if (el) el.style.display = (t === tab) ? 'block' : 'none';
+  });
+  document.querySelectorAll('#coll-tabs .tab').forEach(t => t.classList.remove('active'));
+  if (clickedEl) clickedEl.classList.add('active');
+}
+
+// ── WHR DETAIL DATA ────────────────────────────────────────────────────
+const WHR_DATA = [
+  {
+    id: 'PTID-WR-0001', ref: 'ZIM/TDB/PREM/23&25/P/290', loanId: 'PTID-LR-0003',
+    bank: 'TDB', bankFull: 'Trade & Development Bank',
+    keeper: 'Reload Harare', location: 'Harare, Zimbabwe',
+    origin: '2-ZIM', type: 'Processed', crop: '2023 / 2025',
+    volume: 1692200, value: 10317104, rate: 0.85, lendable: 8769538,
+    loan: 'ZIM/TDB/PREM/23&25/P/290', loanBal: 11254493,
+    status: 'compliant', date: '31 Mar 2026',
+    avgPrice: '$6.10 / kg',
+    bankContact: 'TDB Operations Desk', facility: 'Stage 4 — Processed Zimbabwe',
+    facilityLimit: '$65,000,000', sublimit: 'Zimbabwe Processed $65M',
+    note: 'Mixed 2023 and 2025 crop year processed tobacco. Reload Harare confirmed stock on 31 Mar 2026. Insurance in place.'
+  },
+  {
+    id: 'PTID-WR-0002', ref: 'ZIM/TDB/PREM/26/G/001', loanId: 'PTID-LR-0002',
+    bank: 'TDB', bankFull: 'Trade & Development Bank',
+    keeper: 'Reload Harare', location: 'Harare, Zimbabwe',
+    origin: '2-ZIM', type: 'Green (unprocessed)', crop: '2026',
+    volume: 1242106, value: 4720003, rate: 0.85, lendable: 4012003,
+    loan: 'ZIM/TDB/PREM/26/G/001', loanBal: 7149368,
+    status: 'breach', date: '27 Mar 2026',
+    avgPrice: '$3.80 / kg',
+    bankContact: 'TDB Operations Desk', facility: 'Stage 2 — Green Zimbabwe',
+    facilityLimit: '$65,000,000', sublimit: 'Zimbabwe Green leaf $65M',
+    note: '⚠ COVERAGE BREACH. Lendable $4,012,003 vs loan $7,149,368. Shortfall $3,137,365. New 2026 crop green tobacco. More green leaf expected to be delivered to warehouse in coming weeks which will cure the breach.'
+  },
+  {
+    id: 'PTID-WR-0003', ref: 'SA/TDB/PREM/24&25/P/108', loanId: 'PTID-LR-0001',
+    bank: 'TDB', bankFull: 'Trade & Development Bank',
+    keeper: 'Reload RSA', location: 'South Africa (RSA)',
+    origin: '2-ZIM', type: 'Processed', crop: '2024 / 2025',
+    volume: 762800, value: 5410448, rate: 0.85, lendable: 4598881,
+    loan: 'TDB/RSA/PREM/25/P/108', loanBal: 0,
+    status: 'compliant', date: '16 Apr 2026',
+    avgPrice: '$7.09 / kg',
+    bankContact: 'TDB Operations Desk', facility: 'Stage 4 — Processed RSA',
+    facilityLimit: '$65,000,000', sublimit: 'RSA Location risk',
+    note: 'Processed tobacco transited from Zimbabwe to RSA for onward sale. Reload RSA confirmed. No loan currently drawn against this — acts as excess coverage at facility level.'
+  },
+  {
+    id: 'PTID-WR-0004', ref: 'NO.3706 / NO.3771 / NO.4387', loanId: 'PTID-LR-0006',
+    bank: 'BIC-BRED', bankFull: 'Banque Internationale de Commerce — BRED',
+    keeper: 'CUW / Matriz (Brazil)', location: 'Brazil',
+    origin: '1-BRA', type: 'Processed', crop: '2025 / 2026',
+    volume: 850000, value: 7301000, rate: 0.85, lendable: 6205850,
+    loan: 'BIC/BRA/L2/SL3.2/042', loanBal: 8719600,
+    status: 'compliant', date: '16 Apr 2026',
+    avgPrice: '$8.59 / kg',
+    bankContact: 'BIC-BRED Geneva Trade Finance', facility: 'L2 — Brazil Sub-limit 3.2',
+    facilityLimit: '$10,000,000', sublimit: 'Brazil $10M',
+    note: 'Three receipts consolidated: NO.3706 (550,000 kg, 2026 crop), NO.3771 (140,000 kg, 2025), NO.4387 (160,000 kg, 2025). All held at CUW Matriz Brazil. Rate: COF + 4.00%.'
+  },
+  {
+    id: 'PTID-WR-0005', ref: 'SA/BICBRED/PREM/25/P/015', loanId: 'PTID-LR-0008',
+    bank: 'BIC-BRED', bankFull: 'Banque Internationale de Commerce — BRED',
+    keeper: 'Reload RSA', location: 'South Africa (RSA)',
+    origin: '2-ZIM', type: 'Processed', crop: '2025',
+    volume: 244600, value: 1653890, rate: 0.85, lendable: 1405807,
+    loan: 'BIC/ZIM/L2/SL3.1/018', loanBal: 559932,
+    status: 'compliant', date: '13 Apr 2026',
+    avgPrice: '$6.76 / kg',
+    bankContact: 'BIC-BRED Geneva Trade Finance', facility: 'L2 — Zimbabwe Sub-limit 3.1',
+    facilityLimit: '$12,500,000', sublimit: 'Zimbabwe $12.5M',
+    note: '2025 Zimbabwe processed tobacco. Origin Zimbabwe, location risk RSA. Lendable $1,405,807 well above loan balance $559,932 — significant surplus here. Rate: COF + 6.00%.'
+  },
+];
+
+function openWHRDetail(idx) {
+  const w = WHR_DATA[idx];
+  const isBreaching = w.status === 'breach';
+  const coverage = (w.lendable / (w.loanBal || w.lendable)) * 100;
+  const surplus = w.lendable - w.loanBal;
+  const barPct = Math.min(100, (w.lendable / (w.loanBal || w.lendable)) * 100);
+  const barColor = isBreaching ? 'var(--red)' : 'var(--accent)';
+
+  document.getElementById('whr-detail-title').innerHTML =
+    `${w.id} — ${w.bank} <span class="modal-close" onclick="closeModal('modal-whr-detail')">×</span>`;
+
+  document.getElementById('whr-detail-body').innerHTML = `
+    <!-- Status banner -->
+    <div style="padding:10px 14px;border-radius:8px;margin-bottom:18px;background:${isBreaching ? 'var(--red-light)' : 'var(--accent-light)'};border:1px solid ${isBreaching ? '#F5B0A8' : '#A8D4BC'}">
+      <div style="font-size:12px;font-weight:600;color:${isBreaching ? 'var(--red)' : 'var(--accent)'}">
+        ${isBreaching ? '⚠ COVERAGE BREACH — action required' : '✓ Compliant — coverage within limits'}
+      </div>
+      <div style="font-size:11.5px;margin-top:2px;color:${isBreaching ? 'var(--red)' : 'var(--accent)'}">
+        ${w.note}
+      </div>
+    </div>
+
+    <!-- 3-metric row -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">WHR Value</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700">$${w.value.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Lendable @85%</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:${isBreaching ? 'var(--red)' : 'var(--accent)'}">$${w.lendable.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Loan Balance</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:${isBreaching ? 'var(--red)' : 'var(--text)'}">$${w.loanBal.toLocaleString()}</div>
+      </div>
+    </div>
+
+    <!-- Coverage bar -->
+    <div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+        <span style="color:var(--text2)">Coverage ratio</span>
+        <span style="font-family:'DM Mono',monospace;font-weight:600;color:${isBreaching ? 'var(--red)' : 'var(--accent)'}">
+          ${isBreaching ? '⚠' : '✓'} ${w.loanBal > 0 ? Math.round((w.lendable/w.loanBal)*100) + '%' : '100%+'} covered &nbsp;|&nbsp; Surplus/(Deficit): $${surplus >= 0 ? '+' : ''}${surplus.toLocaleString()}
+        </span>
+      </div>
+      <div style="background:var(--border);border-radius:6px;height:10px;overflow:hidden">
+        <div style="height:100%;border-radius:6px;background:${barColor};width:${Math.min(100,barPct)}%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:3px">
+        <span>0%</span><span>Lendable threshold (100%)</span>
+      </div>
+    </div>
+
+    <!-- Details grid -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:12.5px;margin-bottom:14px">
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Bank</div><div style="font-weight:600">${w.bankFull}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Bank contact</div><div>${w.bankContact}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Facility</div><div>${w.facility}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Sub-limit</div><div>${w.sublimit}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">WHR Keeper</div><div>${w.keeper}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Location</div><div>${w.location}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Tobacco type</div><div>${w.type}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Crop year</div><div>${w.crop}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Volume</div><div style="font-family:'DM Mono',monospace">${w.volume.toLocaleString()} kg</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Avg price</div><div style="font-family:'DM Mono',monospace">${w.avgPrice}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Cost centre (origin)</div><div><span class="badge badge-gray">${w.origin}</span></div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Advance rate</div><div style="font-family:'DM Mono',monospace">${w.rate * 100}%</div></div>
+      <div style="padding:8px 12px;border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Linked loan ref</div><div style="font-family:'DM Mono',monospace;font-size:11px">${w.loan}</div></div>
+      <div style="padding:8px 12px"><div style="color:var(--text3);font-size:11px">WHR date</div><div>${w.date}</div></div>
+    </div>
+  `;
+  openModal('modal-whr-detail');
+}
+
+// ── IN-TRANSIT DATA ─────────────────────────────────────────────────────
+const TRANSIT_DATA = [
+  {
+    ptsi: 'PTSI18916 E', bank: 'TDB', bankFull: 'Trade & Development Bank',
+    customer: 'Unga Unga', invoice: 'TBA — pending delivery',
+    value: 106080, lendable: 90168, rate: 0.85,
+    origin: '2-ZIM', type: 'Processed',
+    security: 'Bill of Lading (B/L)', keeper: 'In transit — carrier',
+    depFrom: 'Reload Harare, Zimbabwe', destination: 'Buyer warehouse',
+    shipDate: '10 Apr 2026', expectedDelivery: 'Late Apr 2026',
+    facility: 'Stage 5 — In-Transit / Trust Receipt',
+    facilityLimit: '$65,000,000', linkedLoan: 'TDB/ZIM/TR/26/016',
+    note: 'Processed Zimbabwe tobacco moving from Harare to buyer. Bank holds B/L as security. Once delivered and invoiced, this converts to a Stage 6 Receivable. Linked to Unga Unga contract.'
+  },
+  {
+    ptsi: 'PTSI18917 E', bank: 'TDB', bankFull: 'Trade & Development Bank',
+    customer: 'Unga Unga', invoice: 'TBA — pending delivery',
+    value: 108000, lendable: 91800, rate: 0.85,
+    origin: '2-ZIM', type: 'Processed',
+    security: 'Bill of Lading (B/L)', keeper: 'In transit — carrier',
+    depFrom: 'Reload Harare, Zimbabwe', destination: 'Buyer warehouse',
+    shipDate: '11 Apr 2026', expectedDelivery: 'Late Apr 2026',
+    facility: 'Stage 5 — In-Transit / Trust Receipt',
+    facilityLimit: '$65,000,000', linkedLoan: 'TDB/ZIM/TR/26/017',
+    note: 'Processed Zimbabwe tobacco in transit. Part of Unga Unga multi-shipment contract. B/L issued and held by TDB as collateral for this drawdown.'
+  },
+  {
+    ptsi: 'PTSI18918 F', bank: 'TDB', bankFull: 'Trade & Development Bank',
+    customer: 'Unga Unga', invoice: 'TBA — pending delivery',
+    value: 105750, lendable: 89888, rate: 0.85,
+    origin: '2-ZIM', type: 'Processed',
+    security: 'Bill of Lading (B/L)', keeper: 'In transit — carrier',
+    depFrom: 'Reload Harare, Zimbabwe', destination: 'Buyer warehouse',
+    shipDate: '12 Apr 2026', expectedDelivery: 'Late Apr 2026',
+    facility: 'Stage 5 — In-Transit / Trust Receipt',
+    facilityLimit: '$65,000,000', linkedLoan: 'TDB/ZIM/TR/26/018',
+    note: 'Third Unga Unga shipment currently in transit. Expected delivery end of April 2026. On delivery, PTID will raise invoice and security converts from B/L to receivable assignment.'
+  }
+];
+
+// ── RECEIVABLES DATA ────────────────────────────────────────────────────
+const RECV_DATA = [
+  { ptsi:'PTSI19187',   inv:'PTD-0000994', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Saigon Tobacco Co.', value:831600,  lendable:706860, rate:0.85, origin:'2-ZIM', blDate:'Mar 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/001', note:'Largest single receivable currently assigned. Saigon Tobacco Company (Vietnam). Tobacco shipped, documents presented to bank. Awaiting buyer payment.' },
+  { ptsi:'PTSI18912 C', inv:'PTD-0001194', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:127300,  lendable:108205, rate:0.85, origin:'2-ZIM', blDate:'Feb 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/002', note:'Unga Unga repeat buyer. Part C of multi-shipment contract. Documents presented to TDB.' },
+  { ptsi:'PTSI18915 C', inv:'PTD-0001193', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:158400,  lendable:134640, rate:0.85, origin:'2-ZIM', blDate:'Feb 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/003', note:'Unga Unga Part C — second invoice tranche. Awaiting payment confirmation.' },
+  { ptsi:'PTSI19371',   inv:'PTD-0000931', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Continental',        value:110286,  lendable:93743,  rate:0.85, origin:'2-ZIM', blDate:'Mar 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/004', note:'Continental Tobacco buyer. Invoice assigned to TDB as collateral. Documents submitted and under review.' },
+  { ptsi:'PTSI18915 D', inv:'PTD-0001289', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:158400,  lendable:134640, rate:0.85, origin:'2-ZIM', blDate:'Mar 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/005', note:'Unga Unga Part D. Fourth tranche of ongoing contract. Docs presented to TDB.' },
+  { ptsi:'PTSI18916 F', inv:'PTD-0001359', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:136000,  lendable:115600, rate:0.85, origin:'2-ZIM', blDate:'Apr 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/006', note:'Unga Unga Part F. Most recently assigned receivable — docs presented 10 Apr 2026.' },
+  { ptsi:'PTSI18917 D', inv:'PTD-0001360', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:108000,  lendable:91800,  rate:0.85, origin:'2-ZIM', blDate:'Apr 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/007', note:'Unga Unga Part D second invoice. Shipment delivered, invoice raised, assigned to TDB.' },
+  { ptsi:'PTSI18918 E', inv:'PTD-0001361', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:105750,  lendable:89888,  rate:0.85, origin:'2-ZIM', blDate:'Apr 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/008', note:'Unga Unga Part E. Final tranche of current batch. Docs presented, awaiting TDB confirmation.' },
+];
+
+// ── TRANSIT DETAIL MODAL ────────────────────────────────────────────────
+function openTransitDetail(idx) {
+  const t = TRANSIT_DATA[idx];
+  document.getElementById('transit-detail-title').innerHTML =
+    `In-Transit — ${t.ptsi} <span class="modal-close" onclick="closeModal('modal-transit-detail')">×</span>`;
+  document.getElementById('transit-detail-body').innerHTML = `
+    <div style="padding:10px 14px;border-radius:8px;margin-bottom:16px;background:var(--blue-light);border:1px solid #C5D8EE">
+      <div style="font-size:12px;font-weight:600;color:var(--blue)">⬡ In-Transit — Bill of Lading held as security</div>
+      <div style="font-size:11.5px;margin-top:2px;color:var(--blue)">${t.note}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Shipment Value</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700">$${t.value.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Lendable @85%</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--accent)">$${t.lendable.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Security Type</div>
+        <div style="font-size:13px;font-weight:600;color:var(--blue)">${t.security}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:12.5px">
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Bank</div><div style="font-weight:600">${t.bankFull}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Customer</div><div style="font-weight:600">${t.customer}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">PTSI Reference</div><div style="font-family:'DM Mono',monospace">${t.ptsi}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Invoice</div><div style="font-family:'DM Mono',monospace">${t.invoice}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Departed from</div><div>${t.depFrom}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Destination</div><div>${t.destination}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Ship date</div><div>${t.shipDate}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Expected delivery</div><div>${t.expectedDelivery}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Tobacco type</div><div>${t.type}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Cost centre (origin)</div><div><span class="badge badge-gray">${t.origin}</span></div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Facility</div><div>${t.facility}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Facility limit</div><div style="font-family:'DM Mono',monospace">${t.facilityLimit}</div></div>
+      <div style="padding:8px 12px;border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Linked loan</div><div style="font-family:'DM Mono',monospace;font-size:11px">${t.linkedLoan}</div></div>
+      <div style="padding:8px 12px"><div style="color:var(--text3);font-size:11px">Next step</div><div style="color:var(--accent);font-weight:500">→ Delivery → Invoice → Receivable</div></div>
+    </div>
+  `;
+  openModal('modal-transit-detail');
+}
+
+// ── RECEIVABLE DETAIL MODAL ─────────────────────────────────────────────
+function openRecvDetail(idx) {
+  const r = RECV_DATA[idx];
+  document.getElementById('recv-detail-title').innerHTML =
+    `Receivable — ${r.ptsi} · ${r.customer} <span class="modal-close" onclick="closeModal('modal-recv-detail')">×</span>`;
+  document.getElementById('recv-detail-body').innerHTML = `
+    <div style="padding:10px 14px;border-radius:8px;margin-bottom:16px;background:var(--accent-light);border:1px solid #A8D4BC">
+      <div style="font-size:12px;font-weight:600;color:var(--accent)">◈ Receivable assigned to bank — awaiting buyer payment</div>
+      <div style="font-size:11.5px;margin-top:2px;color:var(--accent)">${r.note}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Invoice Value</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700">$${r.value.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Lendable @${r.rate*100}%</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--accent)">$${r.lendable.toLocaleString()}</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Docs Status</div>
+        <div style="font-size:13px;font-weight:600;color:var(--amber)">${r.docs}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:12.5px">
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Bank</div><div style="font-weight:600">${r.bankFull}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Customer (buyer)</div><div style="font-weight:600">${r.customer}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">PTSI Reference</div><div style="font-family:'DM Mono',monospace">${r.ptsi}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Invoice number</div><div style="font-family:'DM Mono',monospace">${r.inv}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">B/L date</div><div>${r.blDate}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Payment due</div><div>${r.dueDate}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Cost centre (origin)</div><div><span class="badge badge-gray">${r.origin}</span></div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Advance rate</div><div style="font-family:'DM Mono',monospace">${r.rate*100}%</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Facility</div><div>${r.facility}</div></div>
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Facility limit</div><div style="font-family:'DM Mono',monospace">${r.facilityLimit}</div></div>
+      <div style="padding:8px 12px;border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Linked loan</div><div style="font-family:'DM Mono',monospace;font-size:11px">${r.linkedLoan}</div></div>
+      <div style="padding:8px 12px"><div style="color:var(--text3);font-size:11px">Next step</div><div style="color:var(--accent);font-weight:500">→ Buyer pays → Release assignment → Repay loan</div></div>
+    </div>
+  `;
+  openModal('modal-recv-detail');
+}
+
+</script>
+
+<!-- IN-TRANSIT DETAIL MODAL -->
+<div class="modal-backdrop" id="modal-transit-detail">
+  <div class="modal" style="width:580px">
+    <div class="modal-title" id="transit-detail-title">In-Transit Detail <span class="modal-close" onclick="closeModal('modal-transit-detail')">×</span></div>
+    <div id="transit-detail-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-transit-detail')">Mark as Delivered</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-transit-detail')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- RECEIVABLE DETAIL MODAL -->
+<div class="modal-backdrop" id="modal-recv-detail">
+  <div class="modal" style="width:600px">
+    <div class="modal-title" id="recv-detail-title">Receivable Detail <span class="modal-close" onclick="closeModal('modal-recv-detail')">×</span></div>
+    <div id="recv-detail-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm">Mark as Paid</button>
+      <button class="btn btn-ghost btn-sm">Release Assignment</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-recv-detail')">Close</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
