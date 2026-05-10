@@ -219,10 +219,10 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
       <span class="nav-icon">◇</span> Loans
       <span class="nav-count">64</span>
     </div>
-    <div class="nav-item" onclick="">
-      <span class="nav-icon">◇</span> TDB   
-      <span class="nav-count">10 Loans</span>
-    </div>
+    <div class="nav-item" onclick="nav('tdb')">
+  <span class="nav-icon">◇</span> TDB   
+  <span class="nav-count">10 Loans</span>
+</div>
     <div class="nav-item" onclick="nav('collateral')">
       <span class="nav-icon">◉</span> Warehouse & Collateral
       <span class="nav-count">7</span>
@@ -549,7 +549,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
     </div>
   </div>
 </div>
-
+<!-- TDB LOAN DATA PAGE -->
+<div class="page" id="page-tdb">
+  <iframe 
+    src="Loan_Data_Management_-_Premium_Tobacco_Treasury.html" 
+    style="width:100%;height:calc(100vh - 52px);border:none;"
+  ></iframe>
+</div>
 <!-- ══════════════════════════════════════════ -->
 <!-- COLLATERAL -->
 <!-- ══════════════════════════════════════════ -->
