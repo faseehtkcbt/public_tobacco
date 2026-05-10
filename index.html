@@ -55,6 +55,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .main{padding:0;overflow-y:auto;overflow-x:hidden}
 .page{display:none;animation:fadeIn .2s ease}
 .page.active{display:block}
+/* TDB iframe page needs flex/block but no scroll issues */
+#page-tdb.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 /* PAGE HEADER */
 .page-header{padding:24px 28px 0;display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
@@ -220,26 +222,17 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
       <span class="nav-count">64</span>
     </div>
     <div class="nav-item" onclick="nav('tdb')">
-  <span class="nav-icon">◇</span> TDB   
-  <span class="nav-count">10 Loans</span>
-</div>
+      <span class="nav-icon">◇</span> TDB
+      <span class="nav-count">10 Loans</span>
+    </div>
     <div class="nav-item" onclick="nav('collateral')">
-      <span class="nav-icon">◉</span> Warehouse & Collateral
+      <span class="nav-icon">◉</span> Warehouse &amp; Collateral
       <span class="nav-count">7</span>
     </div>
     <div class="nav-item" onclick="nav('movement')">
       <span class="nav-icon">⟳</span> Movement Log
     </div>
   </div>
-  <!-- <div class="nav-section">
-    <div class="nav-label">Reporting</div>
-    <div class="nav-item" onclick="nav('interest')">
-      <span class="nav-icon">∑</span> Interest Accrual
-    </div>
-    <div class="nav-item" onclick="nav('allocation')">
-      <span class="nav-icon">⊞</span> Cost Allocation
-    </div>
-  </div> -->
 </nav>
 
 <!-- MAIN AREA -->
@@ -405,7 +398,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
             <td><span class="badge badge-amber">Near limit</span></td>
           </tr>
           <tr class="bank-row" data-bank="TDB" data-region="Africa" onclick="navToBank('TDB')" style="cursor:pointer" title="View TDB loans">
-            <td><strong>TDB</strong><br/><span style="font-size:11px;color:var(--text3)">Trade & Dev. Bank</span></td>
+            <td><strong>TDB</strong><br/><span style="font-size:11px;color:var(--text3)">Trade &amp; Dev. Bank</span></td>
             <td><span class="badge badge-blue">Africa</span></td>
             <td class="td-mono">$65.0M</td><td class="td-mono">$48.9M</td>
             <td class="td-mono" style="color:var(--accent)">$16.1M</td>
@@ -549,13 +542,17 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
     </div>
   </div>
 </div>
-<!-- TDB LOAN DATA PAGE -->
+
+<!-- ══════════════════════════════════════════ -->
+<!-- TDB — LOAN DATA MANAGEMENT PAGE (iframe)  -->
+<!-- ══════════════════════════════════════════ -->
 <div class="page" id="page-tdb">
-  <iframe 
-    src="Loan_Data_Management_-_Premium_Tobacco_Treasury.html" 
-    style="width:100%;height:calc(100vh - 52px);border:none;"
+  <iframe
+    src="Loan_Data_Management_-_Premium_Tobacco_Treasury.html"
+    style="width:100%;height:calc(100vh - 52px);border:none;display:block;"
   ></iframe>
 </div>
+
 <!-- ══════════════════════════════════════════ -->
 <!-- COLLATERAL -->
 <!-- ══════════════════════════════════════════ -->
@@ -589,41 +586,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
         <div class="metric-sub"><span class="dot red"></span> TDB ZIM Green — $3.14M short</div>
       </div>
     </div>
-
-    <!-- BREACH ALERT -->
-    <!-- <div class="alert alert-red"><span class="alert-icon">⚠</span><div><strong>TDB Zimbabwe Stage 2 (WHR: ZIM/TDB/PREM/26/G/001) — Coverage breach:</strong> Collateral $4,720,003 × 85% = $4,012,003 lendable. Loan balance $7,149,368. Shortfall: <strong>$3,137,365</strong>. Breach absorbed at facility level by processed stock, but individual WHR must be topped up or loan partially repaid.</div></div> -->
-
-    <!-- LIFECYCLE EXPLAINER -->
-    <!-- <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:20px;box-shadow:var(--shadow)">
-      <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">Security lifecycle — how collateral form changes with tobacco state</div>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative">
-        <div style="background:var(--blue-light);border:1px solid #C5D8EE;border-radius:8px 0 0 8px;padding:12px 14px;border-right:none">
-          <div style="font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">① Warehouse</div>
-          <div style="font-size:12.5px;font-weight:600;color:var(--text)">WHR issued</div>
-          <div style="font-size:11px;color:var(--text2);margin-top:4px">Keeper confirms stock. Bank holds WHR document. Advance rate: <strong>85%</strong></div>
-        </div>
-        <div style="background:#FFF3E0;border:1px solid #F0D090;padding:12px 14px;border-left:none;border-right:none;position:relative">
-          <div style="font-size:10px;font-weight:700;color:#B25000;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">② Processing</div>
-          <div style="font-size:12.5px;font-weight:600;color:var(--text)">Trust receipt</div>
-          <div style="font-size:11px;color:var(--text2);margin-top:4px">Goods at factory. Trust receipt replaces WHR temporarily. Same 85%</div>
-        </div>
-        <div style="background:#FFF8E1;border:1px solid #E8D060;padding:12px 14px;border-left:none;border-right:none">
-          <div style="font-size:10px;font-weight:700;color:var(--amber);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">③ Processed</div>
-          <div style="font-size:12.5px;font-weight:600;color:var(--text)">New WHR issued</div>
-          <div style="font-size:11px;color:var(--text2);margin-top:4px">Packed &amp; graded. New WHR at higher value (processed premium). Advance: <strong>85%</strong></div>
-        </div>
-        <div style="background:#F3F0FF;border:1px solid #C8C0E8;padding:12px 14px;border-left:none;border-right:none">
-          <div style="font-size:10px;font-weight:700;color:#5040A0;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">④ In-Transit</div>
-          <div style="font-size:12.5px;font-weight:600;color:var(--text)">Bill of lading</div>
-          <div style="font-size:11px;color:var(--text2);margin-top:4px">Goods shipped. Bank holds B/L as security. Advance: <strong>85%</strong></div>
-        </div>
-        <div style="background:var(--accent-light);border:1px solid #A8D4BC;border-radius:0 8px 8px 0;padding:12px 14px;border-left:none">
-          <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">⑤ Sold</div>
-          <div style="font-size:12.5px;font-weight:600;color:var(--text)">Receivable assigned</div>
-          <div style="font-size:11px;color:var(--text2);margin-top:4px">Invoice issued. Buyer owes TBA. Invoice assigned to bank. Advance: <strong>85%</strong></div>
-        </div>
-      </div>
-    </div> -->
 
     <!-- TABS -->
     <div style="display:flex;gap:2px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;width:fit-content;margin-bottom:16px" id="coll-tabs">
@@ -799,124 +761,69 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
           <span class="badge badge-gray" style="font-family:'DM Mono',monospace">$1,735,736 · @85% = $1,475,376</span>
         </div>
         <table>
-          <thead><tr><th>Bank</th><th>DUE DATE<th>BL DATE<th>PTSI Ref</th></th></th><th>Invoice</th><th>Customer</th><th>Released Quantity</th><th>Released Value</th><th>Invoice USD</th><th>Financed @85%</th><th>Status</th><th>Docs</th><th></th></tr></thead>
+          <thead><tr><th>Bank</th><th>DUE DATE</th><th>BL DATE</th><th>PTSI Ref</th><th>Invoice</th><th>Customer</th><th>Released Quantity</th><th>Released Value</th><th>Invoice USD</th><th>Financed @85%</th><th>Status</th><th>Docs</th><th></th></tr></thead>
           <tbody>
             <tr>
-              <td><strong>TDB</strong></td>
-              <td class="td-mono">01/06/2026</td>
-              <td class="td-mono">01/01/2027</td>
-              <td class="td-mono">PTSI19187</td>
-              <td class="td-mono">PTD-0000994</td>
-              <td>Saigon Tobacco Co.</td>
-              <td class="td-mono">100 KG</td>
-              <td class="td-mono">$831,600</td>
-              <td class="td-mono">$831,600</td>
-              <td class="td-mono" style="color:var(--accent)">$706,860</td>
-              <td class="td-mono">Pending</td>
+              <td><strong>TDB</strong></td><td class="td-mono">01/06/2026</td><td class="td-mono">01/01/2027</td>
+              <td class="td-mono">PTSI19187</td><td class="td-mono">PTD-0000994</td><td>Saigon Tobacco Co.</td>
+              <td class="td-mono">100 KG</td><td class="td-mono">$831,600</td><td class="td-mono">$831,600</td>
+              <td class="td-mono" style="color:var(--accent)">$706,860</td><td class="td-mono">Pending</td>
               <td><span class="badge badge-amber">Pending</span></td>
               <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(0)">View</button></td>
             </tr>
             <tr>
-              <td><strong>TDB</strong></td>
-              <td class="td-mono">01/06/2026</td>
-              <td class="td-mono">01/01/2027</td>
-              <td class="td-mono">PTSI18912 C</td>
-              <td class="td-mono">PTD-0001194</td>
-              <td>Unga Unga</td>
-              <td class="td-mono">100 KG</td>
-              <td class="td-mono">$127,300</td>
-              <td class="td-mono">$127,300</td>
-              <td class="td-mono" style="color:var(--accent)">$108,205</td>
-              <td class="td-mono">Pending</td>
+              <td><strong>TDB</strong></td><td class="td-mono">01/06/2026</td><td class="td-mono">01/01/2027</td>
+              <td class="td-mono">PTSI18912 C</td><td class="td-mono">PTD-0001194</td><td>Unga Unga</td>
+              <td class="td-mono">100 KG</td><td class="td-mono">$127,300</td><td class="td-mono">$127,300</td>
+              <td class="td-mono" style="color:var(--accent)">$108,205</td><td class="td-mono">Pending</td>
               <td><span class="badge badge-amber">Pending</span></td>
               <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(1)">View</button></td>
             </tr>
             <tr>
-              <td><strong>TDB</strong></td>
-              <td class="td-mono">01/06/2026</td>
-              <td class="td-mono">01/01/2027</td>
-              <td class="td-mono">PTSI18915 C</td>
-              <td class="td-mono">PTD-0001193</td>
-              <td>Unga Unga</td>
-              <td class="td-mono">100 KG</td>
-              <td class="td-mono">$158,400</td>
-              <td class="td-mono" style="color:var(--accent)">$134,640</td>
-              <td class="td-mono">Pending</td>
+              <td><strong>TDB</strong></td><td class="td-mono">01/06/2026</td><td class="td-mono">01/01/2027</td>
+              <td class="td-mono">PTSI18915 C</td><td class="td-mono">PTD-0001193</td><td>Unga Unga</td>
+              <td class="td-mono">100 KG</td><td class="td-mono">$158,400</td><td class="td-mono">$158,400</td>
+              <td class="td-mono" style="color:var(--accent)">$134,640</td><td class="td-mono">Pending</td>
               <td><span class="badge badge-amber">Pending</span></td>
               <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(2)">View</button></td>
             </tr>
             <tr>
-              <td><strong>TDB</strong></td>
-              <td class="td-mono">01/06/2026</td>
-              <td class="td-mono">01/01/2027</td>
-              <td class="td-mono">PTSI19371</td>
-              <td class="td-mono">PTD-0000931</td>
-              <td>Continental</td>
-              <td class="td-mono">100 KG</td>
-              <td class="td-mono">$110,286</td>
-              <td class="td-mono">$110,286</td>
-              <td class="td-mono" style="color:var(--accent)">$93,743</td>
-              <td class="td-mono">Pending</td>
+              <td><strong>TDB</strong></td><td class="td-mono">01/06/2026</td><td class="td-mono">01/01/2027</td>
+              <td class="td-mono">PTSI19371</td><td class="td-mono">PTD-0000931</td><td>Continental</td>
+              <td class="td-mono">100 KG</td><td class="td-mono">$110,286</td><td class="td-mono">$110,286</td>
+              <td class="td-mono" style="color:var(--accent)">$93,743</td><td class="td-mono">Pending</td>
               <td><span class="badge badge-amber">Pending</span></td>
               <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(3)">View</button></td>
             </tr>
             <tr>
-              <td><strong>TDB</strong></td>
-              <td class="td-mono">01/06/2026</td>
-              <td class="td-mono">01/01/2027</td>
-              <td class="td-mono">PTSI18915 D</td>
-              <td class="td-mono">PTD-0001289</td>
-              <td>Unga Unga</td>
-              <td class="td-mono">100 KG</td>
-              <td class="td-mono">$158,400</td>
-              <td class="td-mono">$158,400</td>
-              <td class="td-mono" style="color:var(--accent)">$134,640</td>
-              <td class="td-mono">Pending</td>
+              <td><strong>TDB</strong></td><td class="td-mono">01/06/2026</td><td class="td-mono">01/01/2027</td>
+              <td class="td-mono">PTSI18915 D</td><td class="td-mono">PTD-0001289</td><td>Unga Unga</td>
+              <td class="td-mono">100 KG</td><td class="td-mono">$158,400</td><td class="td-mono">$158,400</td>
+              <td class="td-mono" style="color:var(--accent)">$134,640</td><td class="td-mono">Pending</td>
               <td><span class="badge badge-amber">Pending</span></td>
               <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(4)">View</button></td>
             </tr>
             <tr>
-              <td><strong>TDB</strong></td>
-              <td class="td-mono">01/06/2026</td>
-              <td class="td-mono">01/01/2027</td>
-              <td class="td-mono">PTSI18916 F</td>
-              <td class="td-mono">PTD-0001359</td>
-              <td>Unga Unga</td>
-              <td class="td-mono">100 KG</td>
-              <td class="td-mono">$136,000</td>
-              <td class="td-mono">$136,000</td>
-              <td class="td-mono" style="color:var(--accent)">$115,600</td>
-              <td class="td-mono">Pending</td>
+              <td><strong>TDB</strong></td><td class="td-mono">01/06/2026</td><td class="td-mono">01/01/2027</td>
+              <td class="td-mono">PTSI18916 F</td><td class="td-mono">PTD-0001359</td><td>Unga Unga</td>
+              <td class="td-mono">100 KG</td><td class="td-mono">$136,000</td><td class="td-mono">$136,000</td>
+              <td class="td-mono" style="color:var(--accent)">$115,600</td><td class="td-mono">Pending</td>
               <td><span class="badge badge-amber">Pending</span></td>
               <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(5)">View</button></td>
             </tr>
             <tr>
-              <td><strong>TDB</strong></td>
-              <td class="td-mono">01/06/2026</td>
-              <td class="td-mono">01/01/2027</td>
-              <td class="td-mono">PTSI18917 D</td>
-              <td class="td-mono">PTD-0001360</td>
-              <td>Unga Unga</td>
-              <td class="td-mono">100 KG</td>
-              <td class="td-mono">$108,000</td>
-              <td class="td-mono">$108,000</td>
-              <td class="td-mono" style="color:var(--accent)">$91,800</td>
-              <td class="td-mono">Pending</td>
+              <td><strong>TDB</strong></td><td class="td-mono">01/06/2026</td><td class="td-mono">01/01/2027</td>
+              <td class="td-mono">PTSI18917 D</td><td class="td-mono">PTD-0001360</td><td>Unga Unga</td>
+              <td class="td-mono">100 KG</td><td class="td-mono">$108,000</td><td class="td-mono">$108,000</td>
+              <td class="td-mono" style="color:var(--accent)">$91,800</td><td class="td-mono">Pending</td>
               <td><span class="badge badge-amber">Pending</span></td>
               <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(6)">View</button></td>
             </tr>
             <tr>
-              <td><strong>TDB</strong></td>
-              <td class="td-mono">01/06/2026</td>
-              <td class="td-mono">01/01/2027</td>
-              <td class="td-mono">PTSI18918 E</td>
-              <td class="td-mono">PTD-0001361</td>
-              <td>Unga Unga</td>
-              <td class="td-mono">100 KG</td>
-              <td class="td-mono">$105,750</td>
-              <td class="td-mono">$105,750</td>
-              <td class="td-mono" style="color:var(--accent)">$89,888</td>
-              <td class="td-mono">Pending</td>
+              <td><strong>TDB</strong></td><td class="td-mono">01/06/2026</td><td class="td-mono">01/01/2027</td>
+              <td class="td-mono">PTSI18918 E</td><td class="td-mono">PTD-0001361</td><td>Unga Unga</td>
+              <td class="td-mono">100 KG</td><td class="td-mono">$105,750</td><td class="td-mono">$105,750</td>
+              <td class="td-mono" style="color:var(--accent)">$89,888</td><td class="td-mono">Pending</td>
               <td><span class="badge badge-amber">Pending</span></td>
               <td><button class="btn btn-ghost btn-sm" onclick="openRecvDetail(7)">View</button></td>
             </tr>
@@ -942,8 +849,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
             <tr>
               <td><strong>BIC-BRED</strong></td>
               <td><span class="badge badge-gray">2-ZIM</span></td>
-              <td class="td-mono">$1,368,280</td>
-              <td class="td-mono">90%</td>
+              <td class="td-mono">$1,368,280</td><td class="td-mono">90%</td>
               <td class="td-mono" style="color:var(--accent)">$1,231,452</td>
               <td class="td-mono">$20,000,000</td>
               <td class="td-mono" style="color:var(--text3)">$0</td>
@@ -952,8 +858,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
             <tr>
               <td><strong>BIC-BRED</strong></td>
               <td><span class="badge badge-gray">1-BRA</span></td>
-              <td class="td-mono">$7,086,000</td>
-              <td class="td-mono">90%</td>
+              <td class="td-mono">$7,086,000</td><td class="td-mono">90%</td>
               <td class="td-mono" style="color:var(--accent)">$6,377,400</td>
               <td class="td-mono">—</td>
               <td class="td-mono" style="color:var(--text3)">$0</td>
@@ -961,8 +866,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
             </tr>
             <tr style="background:var(--surface2);font-weight:600">
               <td colspan="2" style="text-align:right;font-size:12px">BIC TOTAL POOL</td>
-              <td class="td-mono">$8,454,280</td>
-              <td class="td-mono">90%</td>
+              <td class="td-mono">$8,454,280</td><td class="td-mono">90%</td>
               <td class="td-mono" style="color:var(--accent)">$7,608,852</td>
               <td colspan="3"></td>
             </tr>
@@ -977,7 +881,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
         <strong style="color:var(--text)">How the bank checks you are within limits.</strong> The bank adds up all three security types (WHR stock + receivables + in-transit), each multiplied by 85%, plus any clean/pre-crop unsecured balance. If the total exceeds the loan outstanding, you have a surplus. If below, it is a breach and you must add collateral or repay.
       </div>
 
-      <!-- TDB Position -->
+      <!-- TDB + BIC-BRED Position -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)">
           <div style="font-size:13px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center">
@@ -1256,7 +1160,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 <div class="modal-backdrop" id="modal-loan-detail">
   <div class="modal">
     <div class="modal-title" id="loan-detail-title">Loan detail <span class="modal-close" onclick="closeModal('modal-loan-detail')">×</span></div>
-    <div id="loan-detail-body">
+    <div id="loan-detail-body"></div>
     <div class="modal-footer" style="justify-content:space-between">
       <div style="display:flex;gap:8px">
         <button class="btn btn-ghost btn-sm">Record repayment</button>
@@ -1307,6 +1211,31 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
   </div>
 </div>
 
+<!-- IN-TRANSIT DETAIL MODAL -->
+<div class="modal-backdrop" id="modal-transit-detail">
+  <div class="modal" style="width:580px">
+    <div class="modal-title" id="transit-detail-title">In-Transit Detail <span class="modal-close" onclick="closeModal('modal-transit-detail')">×</span></div>
+    <div id="transit-detail-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-transit-detail')">Mark as Delivered</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-transit-detail')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- RECEIVABLE DETAIL MODAL -->
+<div class="modal-backdrop" id="modal-recv-detail">
+  <div class="modal" style="width:600px">
+    <div class="modal-title" id="recv-detail-title">Receivable Detail <span class="modal-close" onclick="closeModal('modal-recv-detail')">×</span></div>
+    <div id="recv-detail-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost btn-sm">Mark as Paid</button>
+      <button class="btn btn-ghost btn-sm">Release Assignment</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-recv-detail')">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── LOAN DATA ──────────────────────────────────────────────────────────
 const ALL_LOANS = [
@@ -1335,7 +1264,6 @@ const ALL_LOANS = [
   {id:'TBA-LR-0023', ref:'CITIBANK/ZIM/FY26/016',   bank:'CITIBANK', bankFull:'Citibank N.A.',                         type:'Trade finance',         cc:'2-ZIM', principal:9207938,  rate:'9.60%',  interest:'$73,543',   due:'30 Jun 2026', drawnOn:'10 Mar 2026', whr:'—',            status:'outstanding', facility:'Zimbabwe Trade Finance',  sublimit:'ZIM $15M', note:'Citibank Zimbabwe trade finance. Clean facility at 61% utilisation. Against ZIM export docs.'},
 ];
 
-// Bank meta info for the summary strip
 const BANK_META = {
   'TDB':      {bal:'$48.9M', limit:'$65.0M', rate:'SOFR+5.50%'},
   'BIC-BRED': {bal:'$16.0M', limit:'$25.0M', rate:'COF+4.00%'},
@@ -1354,7 +1282,6 @@ const BANK_META = {
 let currentLoanBank = 'All';
 let currentLoanSearch = '';
 
-// ── BADGE HELPERS ──────────────────────────────────────────────────────
 function stageBadge(type) {
   const t = type.toLowerCase();
   if (t.includes('stage 1') || t.includes('pre-crop')) return 'badge-blue';
@@ -1365,15 +1292,12 @@ function stageBadge(type) {
   return 'badge-gray';
 }
 function statusBadge(s) {
-  if (s === 'overdue')    return '<span class="badge badge-red">Overdue</span>';
-  if (s === 'due-soon')   return '<span class="badge badge-amber">Due soon</span>';
+  if (s === 'overdue')  return '<span class="badge badge-red">Overdue</span>';
+  if (s === 'due-soon') return '<span class="badge badge-amber">Due soon</span>';
   return '<span class="badge badge-green">Outstanding</span>';
 }
-function fmtPrincipal(n) {
-  return '$' + n.toLocaleString();
-}
+function fmtPrincipal(n) { return '$' + n.toLocaleString(); }
 
-// ── RENDER LOANS TABLE ─────────────────────────────────────────────────
 function renderLoans() {
   const tbody = document.getElementById('loans-tbody');
   const empty = document.getElementById('loans-empty');
@@ -1403,13 +1327,11 @@ function renderLoans() {
   }
 
   empty.style.display = 'none';
-  tbody.innerHTML = filtered.map((l,i) => {
+  tbody.innerHTML = filtered.map(l => {
     const globalIdx = ALL_LOANS.indexOf(l);
     return `
     <tr>
-      <td>
-        <span class="td-mono" style="font-size:12px;font-weight:600;color:var(--accent)">${l.id}</span>
-      </td>
+      <td><span class="td-mono" style="font-size:12px;font-weight:600;color:var(--accent)">${l.id}</span></td>
       <td><strong>${l.bank}</strong><br/><span style="font-size:10px;color:var(--text3)">${l.bankFull}</span></td>
       <td><span class="badge ${stageBadge(l.type)}">${l.type}</span></td>
       <td><span class="badge badge-gray">${l.cc}</span></td>
@@ -1419,19 +1341,14 @@ function renderLoans() {
       <td class="td-mono" style="font-size:11.5px">${l.due}</td>
       <td>${statusBadge(l.status)}</td>
       <td><button class="btn btn-ghost btn-sm" onclick="openLoanDetail(${globalIdx})">View</button></td>
-    </tr>
-  `}).join('');
+    </tr>`;
+  }).join('');
 }
 
-// ── SET BANK FILTER ────────────────────────────────────────────────────
 function setLoanBank(bank, clickedTab) {
   currentLoanBank = bank;
-
-  // Update tabs
   document.querySelectorAll('#loan-bank-tabs .tab').forEach(t => t.classList.remove('active'));
   if (clickedTab) clickedTab.classList.add('active');
-
-  // Bank summary strip
   const strip = document.getElementById('loan-bank-strip');
   const backBtn = document.getElementById('loans-back-btn');
   if (bank !== 'All' && BANK_META[bank]) {
@@ -1451,20 +1368,16 @@ function setLoanBank(bank, clickedTab) {
     document.getElementById('loans-page-title').textContent = 'Loan Register';
     document.getElementById('loans-page-sub').textContent = 'All active drawdowns · interest auto-calculated daily';
   }
-
   renderLoans();
 }
 
-// ── SEARCH ─────────────────────────────────────────────────────────────
 function filterLoans() {
   currentLoanSearch = document.getElementById('loan-search').value;
   renderLoans();
 }
 
-// ── NAVIGATE FROM BANK ROW → LOANS FILTERED ───────────────────────────
 function navToBank(bank) {
   nav('loans');
-  // Small delay so page is visible before we switch the tab
   setTimeout(() => {
     if (bank === 'All') {
       const allTab = document.querySelector('#loan-bank-tabs .tab');
@@ -1472,15 +1385,12 @@ function navToBank(bank) {
     } else {
       const tabs = document.querySelectorAll('#loan-bank-tabs .tab');
       let target = null;
-      tabs.forEach(t => {
-        if (t.textContent.trim() === bank) target = t;
-      });
+      tabs.forEach(t => { if (t.textContent.trim() === bank) target = t; });
       setLoanBank(bank, target);
     }
   }, 50);
 }
 
-// ── BANK REGION FILTER (Banks page) ───────────────────────────────────
 function filterBankRegion(region, clickedTab) {
   document.querySelectorAll('#bank-region-tabs .tab').forEach(t => t.classList.remove('active'));
   clickedTab.classList.add('active');
@@ -1490,7 +1400,6 @@ function filterBankRegion(region, clickedTab) {
   });
 }
 
-// ── NAVIGATION ─────────────────────────────────────────────────────────
 function nav(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -1510,7 +1419,6 @@ document.querySelectorAll('.modal-backdrop').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
 
-// ── LOAN DETAIL MODAL ────────────────────────────────────────────────
 function openLoanDetail(idx) {
   const l = ALL_LOANS[idx];
   const isOverdue  = l.status === 'overdue';
@@ -1552,16 +1460,14 @@ function openLoanDetail(idx) {
       <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Due date</div><div style="font-family:'DM Mono',monospace;color:${isOverdue ? 'var(--red)' : isDueSoon ? 'var(--amber)' : 'var(--text)'};font-weight:${isOverdue||isDueSoon?'600':'400'}">${l.due}${isOverdue?' ⚠':isDueSoon?' ↑':''}</div></div>
       <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Linked WHR</div><div style="font-family:'DM Mono',monospace;color:${l.whr!=='—'?'var(--accent)':'var(--text3)'}">${l.whr}</div></div>
       <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Status</div><div>${statusBadge(l.status)}</div></div>
-      <div style="padding:8px 12px;grid-column:1/-1;border-top:0"><div style="color:var(--text3);font-size:11px;margin-bottom:3px">Notes</div><div style="font-size:12px;color:var(--text2)">${l.note}</div></div>
+      <div style="padding:8px 12px;grid-column:1/-1"><div style="color:var(--text3);font-size:11px;margin-bottom:3px">Notes</div><div style="font-size:12px;color:var(--text2)">${l.note}</div></div>
     </div>
   `;
   openModal('modal-loan-detail');
 }
 
-// ── INIT ───────────────────────────────────────────────────────────────
 renderLoans();
 
-// ── COLLATERAL TABS ────────────────────────────────────────────────────
 function showCollTab(tab, clickedEl) {
   ['whr','transit','recv','position'].forEach(t => {
     const el = document.getElementById('ctab-' + t);
@@ -1571,79 +1477,17 @@ function showCollTab(tab, clickedEl) {
   if (clickedEl) clickedEl.classList.add('active');
 }
 
-// ── WHR DETAIL DATA ────────────────────────────────────────────────────
 const WHR_DATA = [
-  {
-    id: 'TBA-WR-0001', ref: 'ZIM/TDB/PREM/23&25/P/290', loanId: 'TBA-LR-0003',
-    bank: 'TDB', bankFull: 'Trade & Development Bank',
-    keeper: 'Reload Harare', location: 'Harare, Zimbabwe',
-    origin: '2-ZIM', type: 'Processed', crop: '2023 / 2025',
-    volume: 1692200, value: 10317104, rate: 0.85, lendable: 8769538,
-    loan: 'ZIM/TDB/PREM/23&25/P/290', loanBal: 11254493,
-    status: 'compliant', date: '31 Mar 2026',
-    avgPrice: '$6.10 / kg',
-    bankContact: 'TDB Operations Desk', facility: 'Stage 4 — Processed Zimbabwe',
-    facilityLimit: '$65,000,000', sublimit: 'Zimbabwe Processed $65M',
-    note: 'Mixed 2023 and 2025 crop year processed tobacco. Reload Harare confirmed stock on 31 Mar 2026. Insurance in place.'
-  },
-  {
-    id: 'TBA-WR-0002', ref: 'ZIM/TDB/PREM/26/G/001', loanId: 'TBA-LR-0002',
-    bank: 'TDB', bankFull: 'Trade & Development Bank',
-    keeper: 'Reload Harare', location: 'Harare, Zimbabwe',
-    origin: '2-ZIM', type: 'Green (unprocessed)', crop: '2026',
-    volume: 1242106, value: 4720003, rate: 0.85, lendable: 4012003,
-    loan: 'ZIM/TDB/PREM/26/G/001', loanBal: 7149368,
-    status: 'breach', date: '27 Mar 2026',
-    avgPrice: '$3.80 / kg',
-    bankContact: 'TDB Operations Desk', facility: 'Stage 2 — Green Zimbabwe',
-    facilityLimit: '$65,000,000', sublimit: 'Zimbabwe Green leaf $65M',
-    note: '⚠ COVERAGE BREACH. Lendable $4,012,003 vs loan $7,149,368. Shortfall $3,137,365. New 2026 crop green tobacco. More green leaf expected to be delivered to warehouse in coming weeks which will cure the breach.'
-  },
-  {
-    id: 'TBA-WR-0003', ref: 'SA/TDB/PREM/24&25/P/108', loanId: 'TBA-LR-0001',
-    bank: 'TDB', bankFull: 'Trade & Development Bank',
-    keeper: 'Reload RSA', location: 'South Africa (RSA)',
-    origin: '2-ZIM', type: 'Processed', crop: '2024 / 2025',
-    volume: 762800, value: 5410448, rate: 0.85, lendable: 4598881,
-    loan: 'TDB/RSA/PREM/25/P/108', loanBal: 0,
-    status: 'compliant', date: '16 Apr 2026',
-    avgPrice: '$7.09 / kg',
-    bankContact: 'TDB Operations Desk', facility: 'Stage 4 — Processed RSA',
-    facilityLimit: '$65,000,000', sublimit: 'RSA Location risk',
-    note: 'Processed tobacco transited from Zimbabwe to RSA for onward sale. Reload RSA confirmed. No loan currently drawn against this — acts as excess coverage at facility level.'
-  },
-  {
-    id: 'TBA-WR-0004', ref: 'NO.3706 / NO.3771 / NO.4387', loanId: 'TBA-LR-0006',
-    bank: 'BIC-BRED', bankFull: 'Banque Internationale de Commerce — BRED',
-    keeper: 'CUW / Matriz (Brazil)', location: 'Brazil',
-    origin: '1-BRA', type: 'Processed', crop: '2025 / 2026',
-    volume: 850000, value: 7301000, rate: 0.85, lendable: 6205850,
-    loan: 'BIC/BRA/L2/SL3.2/042', loanBal: 8719600,
-    status: 'compliant', date: '16 Apr 2026',
-    avgPrice: '$8.59 / kg',
-    bankContact: 'BIC-BRED Geneva Trade Finance', facility: 'L2 — Brazil Sub-limit 3.2',
-    facilityLimit: '$10,000,000', sublimit: 'Brazil $10M',
-    note: 'Three receipts consolidated: NO.3706 (550,000 kg, 2026 crop), NO.3771 (140,000 kg, 2025), NO.4387 (160,000 kg, 2025). All held at CUW Matriz Brazil. Rate: COF + 4.00%.'
-  },
-  {
-    id: 'TBA-WR-0005', ref: 'SA/BICBRED/PREM/25/P/015', loanId: 'TBA-LR-0008',
-    bank: 'BIC-BRED', bankFull: 'Banque Internationale de Commerce — BRED',
-    keeper: 'Reload RSA', location: 'South Africa (RSA)',
-    origin: '2-ZIM', type: 'Processed', crop: '2025',
-    volume: 244600, value: 1653890, rate: 0.85, lendable: 1405807,
-    loan: 'BIC/ZIM/L2/SL3.1/018', loanBal: 559932,
-    status: 'compliant', date: '13 Apr 2026',
-    avgPrice: '$6.76 / kg',
-    bankContact: 'BIC-BRED Geneva Trade Finance', facility: 'L2 — Zimbabwe Sub-limit 3.1',
-    facilityLimit: '$12,500,000', sublimit: 'Zimbabwe $12.5M',
-    note: '2025 Zimbabwe processed tobacco. Origin Zimbabwe, location risk RSA. Lendable $1,405,807 well above loan balance $559,932 — significant surplus here. Rate: COF + 6.00%.'
-  },
+  {id:'TBA-WR-0001',ref:'ZIM/TDB/PREM/23&25/P/290',loanId:'TBA-LR-0003',bank:'TDB',bankFull:'Trade & Development Bank',keeper:'Reload Harare',location:'Harare, Zimbabwe',origin:'2-ZIM',type:'Processed',crop:'2023 / 2025',volume:1692200,value:10317104,rate:0.85,lendable:8769538,loan:'ZIM/TDB/PREM/23&25/P/290',loanBal:11254493,status:'compliant',date:'31 Mar 2026',avgPrice:'$6.10 / kg',bankContact:'TDB Operations Desk',facility:'Stage 4 — Processed Zimbabwe',facilityLimit:'$65,000,000',sublimit:'Zimbabwe Processed $65M',note:'Mixed 2023 and 2025 crop year processed tobacco. Reload Harare confirmed stock on 31 Mar 2026. Insurance in place.'},
+  {id:'TBA-WR-0002',ref:'ZIM/TDB/PREM/26/G/001',loanId:'TBA-LR-0002',bank:'TDB',bankFull:'Trade & Development Bank',keeper:'Reload Harare',location:'Harare, Zimbabwe',origin:'2-ZIM',type:'Green (unprocessed)',crop:'2026',volume:1242106,value:4720003,rate:0.85,lendable:4012003,loan:'ZIM/TDB/PREM/26/G/001',loanBal:7149368,status:'breach',date:'27 Mar 2026',avgPrice:'$3.80 / kg',bankContact:'TDB Operations Desk',facility:'Stage 2 — Green Zimbabwe',facilityLimit:'$65,000,000',sublimit:'Zimbabwe Green leaf $65M',note:'⚠ COVERAGE BREACH. Lendable $4,012,003 vs loan $7,149,368. Shortfall $3,137,365. New 2026 crop green tobacco. More green leaf expected to be delivered to warehouse in coming weeks which will cure the breach.'},
+  {id:'TBA-WR-0003',ref:'SA/TDB/PREM/24&25/P/108',loanId:'TBA-LR-0001',bank:'TDB',bankFull:'Trade & Development Bank',keeper:'Reload RSA',location:'South Africa (RSA)',origin:'2-ZIM',type:'Processed',crop:'2024 / 2025',volume:762800,value:5410448,rate:0.85,lendable:4598881,loan:'TDB/RSA/PREM/25/P/108',loanBal:0,status:'compliant',date:'16 Apr 2026',avgPrice:'$7.09 / kg',bankContact:'TDB Operations Desk',facility:'Stage 4 — Processed RSA',facilityLimit:'$65,000,000',sublimit:'RSA Location risk',note:'Processed tobacco transited from Zimbabwe to RSA for onward sale. Reload RSA confirmed. No loan currently drawn against this — acts as excess coverage at facility level.'},
+  {id:'TBA-WR-0004',ref:'NO.3706 / NO.3771 / NO.4387',loanId:'TBA-LR-0006',bank:'BIC-BRED',bankFull:'Banque Internationale de Commerce — BRED',keeper:'CUW / Matriz (Brazil)',location:'Brazil',origin:'1-BRA',type:'Processed',crop:'2025 / 2026',volume:850000,value:7301000,rate:0.85,lendable:6205850,loan:'BIC/BRA/L2/SL3.2/042',loanBal:8719600,status:'compliant',date:'16 Apr 2026',avgPrice:'$8.59 / kg',bankContact:'BIC-BRED Geneva Trade Finance',facility:'L2 — Brazil Sub-limit 3.2',facilityLimit:'$10,000,000',sublimit:'Brazil $10M',note:'Three receipts consolidated: NO.3706 (550,000 kg, 2026 crop), NO.3771 (140,000 kg, 2025), NO.4387 (160,000 kg, 2025). All held at CUW Matriz Brazil. Rate: COF + 4.00%.'},
+  {id:'TBA-WR-0005',ref:'SA/BICBRED/PREM/25/P/015',loanId:'TBA-LR-0008',bank:'BIC-BRED',bankFull:'Banque Internationale de Commerce — BRED',keeper:'Reload RSA',location:'South Africa (RSA)',origin:'2-ZIM',type:'Processed',crop:'2025',volume:244600,value:1653890,rate:0.85,lendable:1405807,loan:'BIC/ZIM/L2/SL3.1/018',loanBal:559932,status:'compliant',date:'13 Apr 2026',avgPrice:'$6.76 / kg',bankContact:'BIC-BRED Geneva Trade Finance',facility:'L2 — Zimbabwe Sub-limit 3.1',facilityLimit:'$12,500,000',sublimit:'Zimbabwe $12.5M',note:'2025 Zimbabwe processed tobacco. Origin Zimbabwe, location risk RSA. Lendable $1,405,807 well above loan balance $559,932 — significant surplus here. Rate: COF + 6.00%.'},
 ];
 
 function openWHRDetail(idx) {
   const w = WHR_DATA[idx];
   const isBreaching = w.status === 'breach';
-  const coverage = (w.lendable / (w.loanBal || w.lendable)) * 100;
   const surplus = w.lendable - w.loanBal;
   const barPct = Math.min(100, (w.lendable / (w.loanBal || w.lendable)) * 100);
   const barColor = isBreaching ? 'var(--red)' : 'var(--accent)';
@@ -1652,17 +1496,12 @@ function openWHRDetail(idx) {
     `${w.id} — ${w.bank} <span class="modal-close" onclick="closeModal('modal-whr-detail')">×</span>`;
 
   document.getElementById('whr-detail-body').innerHTML = `
-    <!-- Status banner -->
     <div style="padding:10px 14px;border-radius:8px;margin-bottom:18px;background:${isBreaching ? 'var(--red-light)' : 'var(--accent-light)'};border:1px solid ${isBreaching ? '#F5B0A8' : '#A8D4BC'}">
       <div style="font-size:12px;font-weight:600;color:${isBreaching ? 'var(--red)' : 'var(--accent)'}">
         ${isBreaching ? '⚠ COVERAGE BREACH — action required' : '✓ Compliant — coverage within limits'}
       </div>
-      <div style="font-size:11.5px;margin-top:2px;color:${isBreaching ? 'var(--red)' : 'var(--accent)'}">
-        ${w.note}
-      </div>
+      <div style="font-size:11.5px;margin-top:2px;color:${isBreaching ? 'var(--red)' : 'var(--accent)'}">${w.note}</div>
     </div>
-
-    <!-- 3-metric row -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">WHR Value</div>
@@ -1677,13 +1516,11 @@ function openWHRDetail(idx) {
         <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:${isBreaching ? 'var(--red)' : 'var(--text)'}">$${w.loanBal.toLocaleString()}</div>
       </div>
     </div>
-
-    <!-- Coverage bar -->
     <div style="margin-bottom:16px">
       <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
         <span style="color:var(--text2)">Coverage ratio</span>
         <span style="font-family:'DM Mono',monospace;font-weight:600;color:${isBreaching ? 'var(--red)' : 'var(--accent)'}">
-          ${isBreaching ? '⚠' : '✓'} ${w.loanBal > 0 ? Math.round((w.lendable/w.loanBal)*100) + '%' : '100%+'} covered &nbsp;|&nbsp; Surplus/(Deficit): $${surplus >= 0 ? '+' : ''}${surplus.toLocaleString()}
+          ${isBreaching ? '⚠' : '✓'} ${w.loanBal > 0 ? Math.round((w.lendable/w.loanBal)*100) + '%' : '100%+'} covered &nbsp;|&nbsp; Surplus/(Deficit): ${surplus >= 0 ? '+' : ''}$${surplus.toLocaleString()}
         </span>
       </div>
       <div style="background:var(--border);border-radius:6px;height:10px;overflow:hidden">
@@ -1693,8 +1530,6 @@ function openWHRDetail(idx) {
         <span>0%</span><span>Lendable threshold (100%)</span>
       </div>
     </div>
-
-    <!-- Details grid -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:12.5px;margin-bottom:14px">
       <div style="padding:8px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Bank</div><div style="font-weight:600">${w.bankFull}</div></div>
       <div style="padding:8px 12px;border-bottom:1px solid var(--border)"><div style="color:var(--text3);font-size:11px">Bank contact</div><div>${w.bankContact}</div></div>
@@ -1715,59 +1550,23 @@ function openWHRDetail(idx) {
   openModal('modal-whr-detail');
 }
 
-// ── IN-TRANSIT DATA ─────────────────────────────────────────────────────
 const TRANSIT_DATA = [
-  {
-    ptsi: 'PTSI18916 E', bank: 'TDB', bankFull: 'Trade & Development Bank',
-    customer: 'Unga Unga', invoice: 'TBA — pending delivery',
-    value: 106080, lendable: 90168, rate: 0.85,
-    origin: '2-ZIM', type: 'Processed',
-    security: 'Bill of Lading (B/L)', keeper: 'In transit — carrier',
-    depFrom: 'Reload Harare, Zimbabwe', destination: 'Buyer warehouse',
-    shipDate: '10 Apr 2026', expectedDelivery: 'Late Apr 2026',
-    facility: 'Stage 5 — In-Transit / Trust Receipt',
-    facilityLimit: '$65,000,000', linkedLoan: 'TDB/ZIM/TR/26/016',
-    note: 'Processed Zimbabwe tobacco moving from Harare to buyer. Bank holds B/L as security. Once delivered and invoiced, this converts to a Stage 6 Receivable. Linked to Unga Unga contract.'
-  },
-  {
-    ptsi: 'PTSI18917 E', bank: 'TDB', bankFull: 'Trade & Development Bank',
-    customer: 'Unga Unga', invoice: 'TBA — pending delivery',
-    value: 108000, lendable: 91800, rate: 0.85,
-    origin: '2-ZIM', type: 'Processed',
-    security: 'Bill of Lading (B/L)', keeper: 'In transit — carrier',
-    depFrom: 'Reload Harare, Zimbabwe', destination: 'Buyer warehouse',
-    shipDate: '11 Apr 2026', expectedDelivery: 'Late Apr 2026',
-    facility: 'Stage 5 — In-Transit / Trust Receipt',
-    facilityLimit: '$65,000,000', linkedLoan: 'TDB/ZIM/TR/26/017',
-    note: 'Processed Zimbabwe tobacco in transit. Part of Unga Unga multi-shipment contract. B/L issued and held by TDB as collateral for this drawdown.'
-  },
-  {
-    ptsi: 'PTSI18918 F', bank: 'TDB', bankFull: 'Trade & Development Bank',
-    customer: 'Unga Unga', invoice: 'TBA — pending delivery',
-    value: 105750, lendable: 89888, rate: 0.85,
-    origin: '2-ZIM', type: 'Processed',
-    security: 'Bill of Lading (B/L)', keeper: 'In transit — carrier',
-    depFrom: 'Reload Harare, Zimbabwe', destination: 'Buyer warehouse',
-    shipDate: '12 Apr 2026', expectedDelivery: 'Late Apr 2026',
-    facility: 'Stage 5 — In-Transit / Trust Receipt',
-    facilityLimit: '$65,000,000', linkedLoan: 'TDB/ZIM/TR/26/018',
-    note: 'Third Unga Unga shipment currently in transit. Expected delivery end of April 2026. On delivery, TBA will raise invoice and security converts from B/L to receivable assignment.'
-  }
+  {ptsi:'PTSI18916 E',bank:'TDB',bankFull:'Trade & Development Bank',customer:'Unga Unga',invoice:'TBA — pending delivery',value:106080,lendable:90168,rate:0.85,origin:'2-ZIM',type:'Processed',security:'Bill of Lading (B/L)',keeper:'In transit — carrier',depFrom:'Reload Harare, Zimbabwe',destination:'Buyer warehouse',shipDate:'10 Apr 2026',expectedDelivery:'Late Apr 2026',facility:'Stage 5 — In-Transit / Trust Receipt',facilityLimit:'$65,000,000',linkedLoan:'TDB/ZIM/TR/26/016',note:'Processed Zimbabwe tobacco moving from Harare to buyer. Bank holds B/L as security. Once delivered and invoiced, this converts to a Stage 6 Receivable. Linked to Unga Unga contract.'},
+  {ptsi:'PTSI18917 E',bank:'TDB',bankFull:'Trade & Development Bank',customer:'Unga Unga',invoice:'TBA — pending delivery',value:108000,lendable:91800,rate:0.85,origin:'2-ZIM',type:'Processed',security:'Bill of Lading (B/L)',keeper:'In transit — carrier',depFrom:'Reload Harare, Zimbabwe',destination:'Buyer warehouse',shipDate:'11 Apr 2026',expectedDelivery:'Late Apr 2026',facility:'Stage 5 — In-Transit / Trust Receipt',facilityLimit:'$65,000,000',linkedLoan:'TDB/ZIM/TR/26/017',note:'Processed Zimbabwe tobacco in transit. Part of Unga Unga multi-shipment contract. B/L issued and held by TDB as collateral for this drawdown.'},
+  {ptsi:'PTSI18918 F',bank:'TDB',bankFull:'Trade & Development Bank',customer:'Unga Unga',invoice:'TBA — pending delivery',value:105750,lendable:89888,rate:0.85,origin:'2-ZIM',type:'Processed',security:'Bill of Lading (B/L)',keeper:'In transit — carrier',depFrom:'Reload Harare, Zimbabwe',destination:'Buyer warehouse',shipDate:'12 Apr 2026',expectedDelivery:'Late Apr 2026',facility:'Stage 5 — In-Transit / Trust Receipt',facilityLimit:'$65,000,000',linkedLoan:'TDB/ZIM/TR/26/018',note:'Third Unga Unga shipment currently in transit. Expected delivery end of April 2026. On delivery, TBA will raise invoice and security converts from B/L to receivable assignment.'},
 ];
 
-// ── RECEIVABLES DATA ────────────────────────────────────────────────────
 const RECV_DATA = [
-  { ptsi:'PTSI19187',   inv:'PTD-0000994', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Saigon Tobacco Co.', value:831600,  lendable:706860, rate:0.85, origin:'2-ZIM', blDate:'Mar 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/001', note:'Largest single receivable currently assigned. Saigon Tobacco Company (Vietnam). Tobacco shipped, documents presented to bank. Awaiting buyer payment.' },
-  { ptsi:'PTSI18912 C', inv:'PTD-0001194', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:127300,  lendable:108205, rate:0.85, origin:'2-ZIM', blDate:'Feb 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/002', note:'Unga Unga repeat buyer. Part C of multi-shipment contract. Documents presented to TDB.' },
-  { ptsi:'PTSI18915 C', inv:'PTD-0001193', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:158400,  lendable:134640, rate:0.85, origin:'2-ZIM', blDate:'Feb 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/003', note:'Unga Unga Part C — second invoice tranche. Awaiting payment confirmation.' },
-  { ptsi:'PTSI19371',   inv:'PTD-0000931', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Continental',        value:110286,  lendable:93743,  rate:0.85, origin:'2-ZIM', blDate:'Mar 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/004', note:'Continental Tobacco buyer. Invoice assigned to TDB as collateral. Documents submitted and under review.' },
-  { ptsi:'PTSI18915 D', inv:'PTD-0001289', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:158400,  lendable:134640, rate:0.85, origin:'2-ZIM', blDate:'Mar 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/005', note:'Unga Unga Part D. Fourth tranche of ongoing contract. Docs presented to TDB.' },
-  { ptsi:'PTSI18916 F', inv:'PTD-0001359', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:136000,  lendable:115600, rate:0.85, origin:'2-ZIM', blDate:'Apr 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/006', note:'Unga Unga Part F. Most recently assigned receivable — docs presented 10 Apr 2026.' },
-  { ptsi:'PTSI18917 D', inv:'PTD-0001360', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:108000,  lendable:91800,  rate:0.85, origin:'2-ZIM', blDate:'Apr 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/007', note:'Unga Unga Part D second invoice. Shipment delivered, invoice raised, assigned to TDB.' },
-  { ptsi:'PTSI18918 E', inv:'PTD-0001361', bank:'TDB', bankFull:'Trade & Development Bank', customer:'Unga Unga',          value:105750,  lendable:89888,  rate:0.85, origin:'2-ZIM', blDate:'Apr 2026', dueDate:'Pending',    docs:'Presented', facility:'Stage 6 — Receivables Zimbabwe', facilityLimit:'$75,000,000', linkedLoan:'TDB/ZIM/RECV/26/008', note:'Unga Unga Part E. Final tranche of current batch. Docs presented, awaiting TDB confirmation.' },
+  {ptsi:'PTSI19187',  inv:'PTD-0000994',bank:'TDB',bankFull:'Trade & Development Bank',customer:'Saigon Tobacco Co.',value:831600, lendable:706860,rate:0.85,origin:'2-ZIM',blDate:'Mar 2026',dueDate:'Pending',docs:'Presented',facility:'Stage 6 — Receivables Zimbabwe',facilityLimit:'$75,000,000',linkedLoan:'TDB/ZIM/RECV/26/001',note:'Largest single receivable currently assigned. Saigon Tobacco Company (Vietnam). Tobacco shipped, documents presented to bank. Awaiting buyer payment.'},
+  {ptsi:'PTSI18912 C',inv:'PTD-0001194',bank:'TDB',bankFull:'Trade & Development Bank',customer:'Unga Unga',         value:127300,lendable:108205,rate:0.85,origin:'2-ZIM',blDate:'Feb 2026',dueDate:'Pending',docs:'Presented',facility:'Stage 6 — Receivables Zimbabwe',facilityLimit:'$75,000,000',linkedLoan:'TDB/ZIM/RECV/26/002',note:'Unga Unga repeat buyer. Part C of multi-shipment contract. Documents presented to TDB.'},
+  {ptsi:'PTSI18915 C',inv:'PTD-0001193',bank:'TDB',bankFull:'Trade & Development Bank',customer:'Unga Unga',         value:158400,lendable:134640,rate:0.85,origin:'2-ZIM',blDate:'Feb 2026',dueDate:'Pending',docs:'Presented',facility:'Stage 6 — Receivables Zimbabwe',facilityLimit:'$75,000,000',linkedLoan:'TDB/ZIM/RECV/26/003',note:'Unga Unga Part C — second invoice tranche. Awaiting payment confirmation.'},
+  {ptsi:'PTSI19371',  inv:'PTD-0000931',bank:'TDB',bankFull:'Trade & Development Bank',customer:'Continental',       value:110286,lendable:93743, rate:0.85,origin:'2-ZIM',blDate:'Mar 2026',dueDate:'Pending',docs:'Presented',facility:'Stage 6 — Receivables Zimbabwe',facilityLimit:'$75,000,000',linkedLoan:'TDB/ZIM/RECV/26/004',note:'Continental Tobacco buyer. Invoice assigned to TDB as collateral. Documents submitted and under review.'},
+  {ptsi:'PTSI18915 D',inv:'PTD-0001289',bank:'TDB',bankFull:'Trade & Development Bank',customer:'Unga Unga',         value:158400,lendable:134640,rate:0.85,origin:'2-ZIM',blDate:'Mar 2026',dueDate:'Pending',docs:'Presented',facility:'Stage 6 — Receivables Zimbabwe',facilityLimit:'$75,000,000',linkedLoan:'TDB/ZIM/RECV/26/005',note:'Unga Unga Part D. Fourth tranche of ongoing contract. Docs presented to TDB.'},
+  {ptsi:'PTSI18916 F',inv:'PTD-0001359',bank:'TDB',bankFull:'Trade & Development Bank',customer:'Unga Unga',         value:136000,lendable:115600,rate:0.85,origin:'2-ZIM',blDate:'Apr 2026',dueDate:'Pending',docs:'Presented',facility:'Stage 6 — Receivables Zimbabwe',facilityLimit:'$75,000,000',linkedLoan:'TDB/ZIM/RECV/26/006',note:'Unga Unga Part F. Most recently assigned receivable — docs presented 10 Apr 2026.'},
+  {ptsi:'PTSI18917 D',inv:'PTD-0001360',bank:'TDB',bankFull:'Trade & Development Bank',customer:'Unga Unga',         value:108000,lendable:91800, rate:0.85,origin:'2-ZIM',blDate:'Apr 2026',dueDate:'Pending',docs:'Presented',facility:'Stage 6 — Receivables Zimbabwe',facilityLimit:'$75,000,000',linkedLoan:'TDB/ZIM/RECV/26/007',note:'Unga Unga Part D second invoice. Shipment delivered, invoice raised, assigned to TDB.'},
+  {ptsi:'PTSI18918 E',inv:'PTD-0001361',bank:'TDB',bankFull:'Trade & Development Bank',customer:'Unga Unga',         value:105750,lendable:89888, rate:0.85,origin:'2-ZIM',blDate:'Apr 2026',dueDate:'Pending',docs:'Presented',facility:'Stage 6 — Receivables Zimbabwe',facilityLimit:'$75,000,000',linkedLoan:'TDB/ZIM/RECV/26/008',note:'Unga Unga Part E. Final tranche of current batch. Docs presented, awaiting TDB confirmation.'},
 ];
 
-// ── TRANSIT DETAIL MODAL ────────────────────────────────────────────────
 function openTransitDetail(idx) {
   const t = TRANSIT_DATA[idx];
   document.getElementById('transit-detail-title').innerHTML =
@@ -1811,7 +1610,6 @@ function openTransitDetail(idx) {
   openModal('modal-transit-detail');
 }
 
-// ── RECEIVABLE DETAIL MODAL ─────────────────────────────────────────────
 function openRecvDetail(idx) {
   const r = RECV_DATA[idx];
   document.getElementById('recv-detail-title').innerHTML =
@@ -1852,32 +1650,6 @@ function openRecvDetail(idx) {
   `;
   openModal('modal-recv-detail');
 }
-
 </script>
-
-<!-- IN-TRANSIT DETAIL MODAL -->
-<div class="modal-backdrop" id="modal-transit-detail">
-  <div class="modal" style="width:580px">
-    <div class="modal-title" id="transit-detail-title">In-Transit Detail <span class="modal-close" onclick="closeModal('modal-transit-detail')">×</span></div>
-    <div id="transit-detail-body"></div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal('modal-transit-detail')">Mark as Delivered</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-transit-detail')">Close</button>
-    </div>
-  </div>
-</div>
-
-<!-- RECEIVABLE DETAIL MODAL -->
-<div class="modal-backdrop" id="modal-recv-detail">
-  <div class="modal" style="width:600px">
-    <div class="modal-title" id="recv-detail-title">Receivable Detail <span class="modal-close" onclick="closeModal('modal-recv-detail')">×</span></div>
-    <div id="recv-detail-body"></div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost btn-sm">Mark as Paid</button>
-      <button class="btn btn-ghost btn-sm">Release Assignment</button>
-      <button class="btn btn-ghost" onclick="closeModal('modal-recv-detail')">Close</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
